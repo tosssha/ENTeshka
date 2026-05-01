@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENTeshka — История Казахстана</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C8A84B;--sky:#00A8E0;
+  --dark:#0D0F14;--card:#181B26;
+  --border:rgba(200,168,75,0.15);
+  --text:#F0EDE6;--muted:#7A7D8A;
+  --green:#2ECC71;--red:#E74C3C;
+}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden;}
+
+/* ══════════════════════════════
+   LANDING PAGE
+══════════════════════════════ */
+#landing{display:block;}
+#app{display:none;}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;
+  background:rgba(13,15,20,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.navbar-logo{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;color:var(--gold);}
+.navbar-logo span{color:var(--sky);}
+.navbar-actions{display:flex;gap:10px;}
+.btn-login{
+  padding:9px 22px;border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:transparent;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:0.84rem;font-weight:500;
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-login:hover{border-color:var(--gold);color:var(--gold);}
+.btn-register{
+  padding:9px 22px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,var(--gold),#A8882B);
+  color:#0D0F14;font-family:'Unbounded',sans-serif;
+  font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.2s;
+}
+.btn-register:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,168,75,0.35);}
+
+/* HERO */
+.hero{
+  padding:160px 48px 100px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,168,75,0.09) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-inner{max-width:700px;position:relative;z-index:1;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.22);
+  border-radius:30px;padding:6px 18px;margin-bottom:28px;
+  font-size:0.73rem;font-weight:600;color:var(--gold);letter-spacing:1px;text-transform:uppercase;
+}
+.hero h1{
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(2.2rem,4.5vw,3.8rem);
+  font-weight:900;line-height:1.1;letter-spacing:-1.5px;
+  margin-bottom:20px;
+}
+.hero h1 .ac{color:var(--gold);}
+.hero-desc{
+  font-size:1.05rem;color:var(--muted);line-height:1.7;
+  max-width:520px;margin-bottom:36px;
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-hero-primary{
+  padding:14px 36px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--gold),#A8882B);
+  color:#0D0F14;font-family:'Unbounded',sans-serif;
+  font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(200,168,75,0.4);}
+.btn-hero-outline{
+  padding:14px 36px;border-radius:10px;
+  border:1px solid rgba(200,168,75,0.3);background:transparent;
+  color:var(--gold);font-family:'Unbounded',sans-serif;
+  font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;
+}
+.btn-hero-outline:hover{background:rgba(200,168,75,0.08);}
+.hero-stats{
+  display:flex;gap:48px;margin-top:60px;
+  padding-top:48px;border-top:1px solid var(--border);
+}
+.hs-num{font-family:'Unbounded',sans-serif;font-size:1.8rem;font-weight:900;color:var(--gold);}
+.hs-label{font-size:0.75rem;color:var(--muted);margin-top:4px;}
+
+/* PRICING SECTION */
+.section{padding:80px 48px;max-width:1100px;margin:0 auto;}
+.sec-eyebrow{
+  font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:12px;
+}
+.sec-title{
+  font-family:'Unbounded',sans-serif;
+  font-size:clamp(1.5rem,2.5vw,2.2rem);
+  font-weight:700;margin-bottom:8px;
+}
+.sec-desc{color:var(--muted);font-size:0.9rem;margin-bottom:48px;line-height:1.6;}
+
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.plan-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:30px 24px;position:relative;
+  transition:all 0.2s;cursor:pointer;
+}
+.plan-card:hover{border-color:rgba(200,168,75,0.4);transform:translateY(-4px);}
+.plan-card.popular{border-color:var(--gold);background:linear-gradient(160deg,rgba(200,168,75,0.06) 0%,var(--card) 100%);}
+.popular-tag{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:#0D0F14;
+  font-family:'Unbounded',sans-serif;font-size:0.6rem;font-weight:700;
+  padding:4px 16px;border-radius:20px;white-space:nowrap;
+}
+.plan-period{font-size:0.78rem;color:var(--muted);margin-bottom:10px;}
+.plan-price{font-family:'Unbounded',sans-serif;font-size:2.1rem;font-weight:900;margin-bottom:4px;}
+.plan-price em{font-family:'Inter',sans-serif;font-size:1rem;font-style:normal;color:var(--gold);}
+.plan-sub{font-size:0.72rem;color:var(--muted);margin-bottom:20px;min-height:16px;}
+.plan-features{margin-bottom:22px;display:flex;flex-direction:column;gap:8px;}
+.plan-feat{font-size:0.81rem;color:var(--muted);}
+.plan-feat::before{content:'✓ ';color:var(--green);font-weight:700;}
+.plan-cta{
+  width:100%;padding:12px;border-radius:9px;
+  font-family:'Unbounded',sans-serif;font-size:0.72rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+}
+.plan-cta-outline{background:transparent;border:1px solid rgba(200,168,75,0.3);color:var(--gold);}
+.plan-cta-outline:hover{background:rgba(200,168,75,0.08);}
+.plan-cta-filled{background:linear-gradient(135deg,var(--gold),#A8882B);border:none;color:#0D0F14;}
+.plan-cta-filled:hover{box-shadow:0 6px 20px rgba(200,168,75,0.35);}
+
+.trust-section{
+  padding:80px 48px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(200,168,75,0.03) 0%,transparent 100%);
+}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:860px;margin:40px auto 0;}
+.trust-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:36px 24px;text-align:center;
+  transition:all 0.3s;
+}
+.trust-card:hover{transform:translateY(-4px);border-color:rgba(200,168,75,0.3);}
+.highlight-card{
+  background:linear-gradient(135deg,rgba(200,168,75,0.1),rgba(200,168,75,0.03));
+  border-color:rgba(200,168,75,0.35);
+}
+.trust-icon{font-size:2.2rem;margin-bottom:14px;}
+.trust-num{
+  font-family:'Unbounded',sans-serif;font-size:2.6rem;font-weight:900;
+  color:var(--gold);margin-bottom:8px;letter-spacing:-1px;
+}
+.trust-label{font-size:0.82rem;color:var(--muted);line-height:1.5;}
+
+/* FEATURES */
+.features-section{
+  padding:80px 48px;border-top:1px solid var(--border);
+  max-width:1100px;margin:0 auto;
+}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.feat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px 24px;transition:all 0.2s;
+}
+.feat-card:hover{border-color:rgba(200,168,75,0.3);transform:translateY(-3px);}
+.feat-icon{font-size:2rem;margin-bottom:14px;}
+.feat-title{font-family:'Unbounded',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:10px;}
+.feat-desc{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+
+/* REVIEWS */
+.reviews-section{
+  padding:80px 48px;border-top:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(0,168,224,0.02) 0%,transparent 100%);
+}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto;}
+.review-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:28px 24px;
+}
+.review-stars{color:var(--gold);font-size:1rem;margin-bottom:14px;letter-spacing:2px;}
+.review-text{font-size:0.83rem;color:var(--text);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.review-author{font-size:0.75rem;color:var(--muted);font-weight:600;}
+
+@media(max-width:768px){
+  .trust-grid,.features-grid,.reviews-grid{grid-template-columns:1fr;}
+  .trust-section,.features-section,.reviews-section{padding:60px 20px;}
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;padding:28px;
+  border-top:1px solid var(--border);
+  font-size:0.78rem;color:var(--muted);
+}
+
+/* ══════════════════════════════
+   MODAL (POPUP)
+══════════════════════════════ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:24px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:22px;padding:40px 36px;
+  width:100%;max-width:420px;position:relative;
+  animation:popIn 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes popIn{from{opacity:0;transform:scale(0.94) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{
+  position:absolute;top:16px;right:18px;
+  background:transparent;border:none;color:var(--muted);
+  font-size:1.4rem;cursor:pointer;line-height:1;
+}
+.modal-close:hover{color:var(--text);}
+.modal-title{font-family:'Unbounded',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:5px;}
+.modal-desc{color:var(--muted);font-size:0.83rem;margin-bottom:24px;}
+.modal-tabs{display:flex;gap:4px;margin-bottom:22px;background:rgba(255,255,255,0.04);border-radius:10px;padding:4px;}
+.modal-tab{
+  flex:1;padding:9px;border-radius:7px;border:none;background:transparent;
+  color:var(--muted);font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;
+}
+.modal-tab.active{background:var(--gold);color:#0D0F14;font-weight:700;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:0.69rem;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.field input{
+  width:100%;padding:11px 13px;border-radius:8px;
+  background:#0D0F14;border:1.5px solid rgba(255,255,255,0.08);
+  color:var(--text);font-family:'Inter',sans-serif;font-size:0.88rem;outline:none;
+  transition:border-color 0.2s;
+}
+.field input:focus{border-color:var(--gold);}
+.field input::placeholder{color:rgba(122,125,138,0.5);}
+.err-box{
+  display:none;background:rgba(231,76,60,0.1);
+  border:1px solid rgba(231,76,60,0.25);border-radius:8px;
+  padding:10px 13px;font-size:0.79rem;color:var(--red);margin-bottom:10px;
+}
+.btn-submit{
+  width:100%;padding:13px;border-radius:9px;border:none;
+  background:linear-gradient(135deg,var(--gold),#A8882B);
+  color:#0D0F14;font-family:'Unbounded',sans-serif;
+  font-size:0.78rem;font-weight:700;cursor:pointer;margin-top:4px;
+}
+.btn-submit:hover{box-shadow:0 6px 20px rgba(200,168,75,0.3);}
+
+/* ══════════════════════════════
+   APP (после входа)
+══════════════════════════════ */
+.app-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;height:62px;
+  background:rgba(13,15,20,0.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.app-logo{font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:900;color:var(--gold);}
+.app-logo span{color:var(--sky);}
+.app-nav-links{display:flex;gap:2px;}
+.app-nb{
+  position:relative;padding:7px 14px;border-radius:8px;border:none;
+  background:transparent;color:var(--muted);
+  font-family:'Inter',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;
+  transition:all 0.2s;
+}
+.app-nb:hover:not(.locked){color:var(--text);background:rgba(255,255,255,0.05);}
+.app-nb.active{color:var(--gold);background:rgba(200,168,75,0.1);}
+.app-nb.locked{color:rgba(122,125,138,0.4);cursor:not-allowed;}
+.lock-icon{font-size:0.65rem;margin-left:4px;opacity:0.6;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.sub-status{
+  font-size:0.7rem;padding:3px 10px;border-radius:20px;
+  background:rgba(231,76,60,0.1);color:var(--red);
+  border:1px solid rgba(231,76,60,0.2);
+}
+.sub-status.active{background:rgba(46,204,113,0.1);color:var(--green);border-color:rgba(46,204,113,0.2);}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--sky));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Unbounded',sans-serif;font-size:0.65rem;font-weight:700;color:#0D0F14;cursor:pointer;
+}
+
+.app-content{padding-top:62px;min-height:100vh;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* HOME PAGE */
+.app-hero{
+  padding:55px 48px;
+  background:linear-gradient(180deg,rgba(200,168,75,0.05) 0%,transparent 100%);
+  border-bottom:1px solid var(--border);
+}
+.app-hero h2{font-family:'Unbounded',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:8px;}
+.app-hero h2 span{color:var(--gold);}
+.app-hero p{color:var(--muted);font-size:0.88rem;margin-bottom:26px;}
+.app-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-sky{
+  padding:12px 28px;border-radius:9px;border:none;
+  background:linear-gradient(135deg,var(--sky),#0076A8);
+  color:#fff;font-family:'Unbounded',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;
+}
+.btn-sky:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,168,224,0.3);}
+.quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:600px;margin:44px 0 0;}
+.qs-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;}
+.qs-num{font-family:'Unbounded',sans-serif;font-size:1.3rem;font-weight:700;color:var(--gold);}
+.qs-label{font-size:0.72rem;color:var(--muted);margin-top:3px;}
+
+/* LOCK OVERLAY for pages */
+.lock-overlay{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(13,15,20,0.85);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;text-align:center;padding:24px;
+}
+.lock-overlay .lock-big{font-size:3rem;margin-bottom:8px;}
+.lock-overlay h3{font-family:'Unbounded',sans-serif;font-size:1.3rem;font-weight:700;}
+.lock-overlay p{color:var(--muted);font-size:0.88rem;max-width:360px;line-height:1.6;}
+.btn-unlock{
+  padding:13px 32px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--gold),#A8882B);
+  color:#0D0F14;font-family:'Unbounded',sans-serif;
+  font-size:0.8rem;font-weight:700;cursor:pointer;margin-top:8px;
+}
+.btn-unlock:hover{box-shadow:0 8px 24px rgba(200,168,75,0.4);}
+
+/* BANK */
+.bank-head{padding:32px 48px 20px;border-bottom:1px solid var(--border);}
+.bank-head h2{font-family:'Unbounded',sans-serif;font-size:1.4rem;font-weight:700;}
+.bank-head h2 span{color:var(--gold);}
+.bank-meta{color:var(--muted);font-size:0.78rem;margin-top:4px;}
+.bank-ctrl{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.filt{
+  padding:6px 14px;border-radius:20px;
+  border:1px solid rgba(255,255,255,0.08);background:transparent;
+  color:var(--muted);font-family:'Inter',sans-serif;font-size:0.75rem;cursor:pointer;
+}
+.filt.active,.filt:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,168,75,0.07);}
+.rev-btn{
+  margin-left:auto;padding:7px 14px;border-radius:20px;
+  border:1px solid rgba(46,204,113,0.3);background:rgba(46,204,113,0.07);
+  color:var(--green);font-family:'Inter',sans-serif;font-size:0.75rem;cursor:pointer;
+}
+.bank-body{padding:20px 48px 60px;}
+.q-block{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:20px 22px;margin-bottom:10px;}
+.q-num{font-size:0.65rem;color:var(--muted);margin-bottom:6px;letter-spacing:0.5px;}
+.q-text{font-size:0.9rem;font-weight:500;margin-bottom:12px;line-height:1.5;}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.q-opt{padding:8px 12px;border-radius:7px;background:#0D0F14;border:1px solid rgba(255,255,255,0.05);font-size:0.78rem;color:var(--muted);}
+.q-opt.correct{background:rgba(46,204,113,0.1);border-color:rgba(46,204,113,0.35);color:var(--green);font-weight:600;}
+.load-more{display:flex;align-items:center;justify-content:center;margin:0 48px 60px;padding:14px;border:1px dashed rgba(200,168,75,0.2);border-radius:10px;color:var(--muted);font-size:0.8rem;cursor:pointer;}
+.load-more:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ENT */
+.ent-start{text-align:center;padding:60px 48px;}
+.ent-start h2{font-family:'Unbounded',sans-serif;font-size:1.7rem;font-weight:700;margin-bottom:8px;}
+.ent-start h2 span{color:var(--sky);}
+.ent-start p{color:var(--muted);font-size:0.86rem;margin-bottom:28px;}
+.ent-stats-row{display:flex;justify-content:center;gap:40px;margin-bottom:30px;}
+.es-n{font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:700;color:var(--sky);}
+.es-l{font-size:0.72rem;color:var(--muted);margin-top:3px;}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:36px;}
+.quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.quiz-qn{font-size:0.72rem;color:var(--muted);}
+.quiz-timer{font-family:'Unbounded',sans-serif;font-size:0.82rem;font-weight:700;color:var(--sky);background:rgba(0,168,224,0.1);padding:4px 12px;border-radius:20px;}
+.quiz-bar{height:3px;background:rgba(255,255,255,0.07);border-radius:3px;margin-bottom:24px;overflow:hidden;}
+.quiz-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--gold));transition:width 0.4s;}
+.quiz-q{font-size:0.96rem;font-weight:500;line-height:1.6;margin-bottom:20px;}
+.quiz-opts{display:flex;flex-direction:column;gap:9px;}
+.qopt{padding:12px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);font-size:0.86rem;cursor:pointer;display:flex;align-items:center;gap:11px;}
+.qopt:hover{border-color:rgba(0,168,224,0.4);}
+.qopt.right{border-color:var(--green);background:rgba(46,204,113,0.08);color:var(--green);}
+.qopt.wrong{border-color:var(--red);background:rgba(231,76,60,0.08);color:var(--red);}
+.opt-l{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:0.65rem;font-weight:700;flex-shrink:0;}
+.quiz-nav{display:flex;justify-content:flex-end;margin-top:20px;}
+.btn-next{padding:10px 24px;border-radius:9px;border:none;background:var(--sky);color:#fff;font-family:'Unbounded',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;}
+.btn-next:disabled{opacity:0.35;cursor:not-allowed;}
+
+/* RESULT */
+.result-wrap{max-width:440px;margin:0 auto;padding:55px 24px;text-align:center;}
+.res-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 24px;background:conic-gradient(var(--gold) calc(var(--p)*1%),rgba(255,255,255,0.07) 0%);display:flex;align-items:center;justify-content:center;position:relative;}
+.res-ring::before{content:'';position:absolute;width:100px;height:100px;border-radius:50%;background:var(--dark);}
+.res-pct{position:relative;z-index:1;font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:900;color:var(--gold);}
+.res-title{font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+.res-sub{color:var(--muted);font-size:0.83rem;margin-bottom:24px;line-height:1.6;}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.res-cell{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;}
+.res-n{font-family:'Unbounded',sans-serif;font-size:1.3rem;font-weight:700;}
+.res-l{font-size:0.7rem;color:var(--muted);margin-top:3px;}
+
+/* PROFILE */
+.prof-wrap{max-width:720px;margin:0 auto;padding:36px;}
+.prof-head{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.prof-av{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--sky));display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:700;color:#0D0F14;flex-shrink:0;}
+.prof-name{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:700;}
+.prof-login{color:var(--muted);font-size:0.8rem;margin-top:3px;}
+.prof-badge{display:inline-block;margin-top:8px;border-radius:20px;padding:3px 12px;font-size:0.7rem;}
+.prof-badge.paid{background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.22);color:var(--green);}
+.prof-badge.unpaid{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.22);color:var(--red);}
+
+/* SUBSCRIPTION PAGE */
+.sub-page{padding:50px 48px;max-width:800px;margin:0 auto;}
+.sub-page h2{font-family:'Unbounded',sans-serif;font-size:1.6rem;font-weight:700;margin-bottom:8px;}
+.sub-page p{color:var(--muted);font-size:0.88rem;margin-bottom:36px;line-height:1.6;}
+.sub-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.sp-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:24px 18px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}
+.sp-card:hover,.sp-card.sel{border-color:var(--gold);background:rgba(200,168,75,0.05);}
+.sp-card.sel::after{content:'✓';position:absolute;top:12px;right:14px;color:var(--gold);font-weight:700;}
+.sp-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#0D0F14;font-family:'Unbounded',sans-serif;font-size:0.58rem;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap;}
+.sp-dur{font-size:0.75rem;color:var(--muted);margin-bottom:8px;}
+.sp-price{font-family:'Unbounded',sans-serif;font-size:1.7rem;font-weight:900;}
+.sp-price em{font-size:0.9rem;font-style:normal;color:var(--gold);}
+.sp-save{font-size:0.68rem;color:var(--green);margin-top:4px;min-height:14px;}
+.how-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:18px;}
+.how-block h3{font-family:'Unbounded',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:14px;}
+.how-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:11px;}
+.how-num{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#0D0F14;font-family:'Unbounded',sans-serif;font-size:0.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.how-text{font-size:0.82rem;color:var(--muted);line-height:1.5;padding-top:3px;}
+.how-text b{color:var(--text);}
+.tg-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:15px;border-radius:11px;border:none;
+  background:linear-gradient(135deg,var(--gold),#A8882B);
+  color:#0D0F14;font-family:'Unbounded',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;
+}
+.tg-btn:hover{box-shadow:0 8px 24px rgba(200,168,75,0.35);}
+
+/* ADMIN */
+.admin-wrap{max-width:780px;margin:0 auto;padding:36px;}
+.admin-title{font-family:'Unbounded',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;}
+.admin-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:16px;}
+.admin-ct{font-family:'Unbounded',sans-serif;font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:14px;}
+.admin-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;}
+.af label{display:block;font-size:0.7rem;color:var(--muted);margin-bottom:5px;}
+.af input,.af select{width:100%;padding:10px 12px;border-radius:8px;background:#0D0F14;border:1px solid rgba(255,255,255,0.08);color:var(--text);font-family:'Inter',sans-serif;font-size:0.85rem;outline:none;}
+.give-btn{padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--green),#27AE60);color:#fff;font-family:'Unbounded',sans-serif;font-size:0.7rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.admin-msg{display:none;margin-top:10px;padding:9px 12px;border-radius:7px;font-size:0.8rem;}
+.user-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#0D0F14;border-radius:9px;margin-bottom:7px;}
+.ur-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--sky));display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:0.65rem;font-weight:700;color:#0D0F14;flex-shrink:0;}
+.ur-info{flex:1;}
+.ur-name{font-size:0.83rem;font-weight:500;}
+.ur-login{font-size:0.7rem;color:var(--muted);margin-top:2px;}
+.ur-badge{font-size:0.68rem;padding:2px 9px;border-radius:20px;flex-shrink:0;}
+.badge-on{background:rgba(46,204,113,0.1);color:var(--green);border:1px solid rgba(46,204,113,0.2);}
+.badge-off{background:rgba(231,76,60,0.1);color:var(--red);border:1px solid rgba(231,76,60,0.2);}
+.sm-btn{padding:5px 11px;border-radius:7px;font-size:0.68rem;cursor:pointer;background:transparent;flex-shrink:0;font-family:'Inter',sans-serif;}
+.sm-btn-red{border:1px solid rgba(231,76,60,0.3);color:var(--red);}
+.sm-btn-gold{border:1px solid rgba(200,168,75,0.3);color:var(--gold);}
+
+.hidden{display:none!important;}
+@media(max-width:768px){
+  .navbar{padding:0 20px;}
+  .hero{padding:120px 20px 60px;}
+  .plans-grid,.sub-plans,.trust-grid,.quick-stats{grid-template-columns:1fr;}
+  .section{padding:60px 20px;}
+  .bank-head,.bank-body,.app-hero,.prof-wrap,.sub-page,.admin-wrap{padding-left:20px;padding-right:20px;}
+  .app-nav{padding:0 16px;}
+  .q-opts{grid-template-columns:1fr;}
+  .admin-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     LANDING PAGE
+══════════════════════════════ -->
+<div id="landing">
+
+  <nav class="navbar">
+    <div class="navbar-logo">ENTE<span>shka</span></div>
+    <div class="navbar-actions">
+      <button class="btn-login" onclick="openModal('login')">Войти</button>
+      <button class="btn-register" onclick="openModal('register')">Зарегистрироваться</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">🇰🇿 Подготовка к ЕНТ</div>
+      <h1>ENTeshka —<br><span class="ac">сдай историю</span><br>с первого раза</h1>
+      <p class="hero-desc">Официальные вопросы ЕНТ по истории Казахстана и основам права. Тесты, тренировки и подробная аналитика — всё в одном месте.</p>
+      <div class="hero-btns">
+        <button class="btn-hero-primary" onclick="openModal('register')">Начать подготовку →</button>
+        <button class="btn-hero-outline" onclick="openModal('login')">Уже есть аккаунт</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hs-num">789+</div><div class="hs-label">пользователей</div></div>
+        <div><div class="hs-num">285+</div><div class="hs-label">официальных вопросов</div></div>
+        <div><div class="hs-num">621+</div><div class="hs-label">сдавших ЕНТ на 17+</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-eyebrow">Тарифы</div>
+    <h2 class="sec-title">Выберите свой план</h2>
+    <p class="sec-desc">Оплата через Kaspi — доступ открываем за 1 минуту. Напишите нам в Telegram.</p>
+    <div class="plans-grid">
+      <div class="plan-card" onclick="openModal('register')">
+        <div class="plan-period">1 месяц</div>
+        <div class="plan-price">1 190 <em>₸</em></div>
+        <div class="plan-sub">в месяц</div>
+        <div class="plan-features">
+          <div class="plan-feat">285+ вопросов ЕНТ</div>
+          <div class="plan-feat">Режим тренировки</div>
+          <div class="plan-feat">Статистика</div>
+        </div>
+        <button class="plan-cta plan-cta-outline">КУПИТЬ</button>
+      </div>
+      <div class="plan-card popular" onclick="openModal('register')">
+        <div class="popular-tag">ВЫГОДНЕЕ</div>
+        <div class="plan-period">3 месяца</div>
+        <div class="plan-price">2 990 <em>₸</em></div>
+        <div class="plan-sub">~997 ₸/мес · экономия 16%</div>
+        <div class="plan-features">
+          <div class="plan-feat">285+ вопросов ЕНТ</div>
+          <div class="plan-feat">Режим тренировки</div>
+          <div class="plan-feat">Приоритетная поддержка</div>
+        </div>
+        <button class="plan-cta plan-cta-filled">КУПИТЬ</button>
+      </div>
+      <div class="plan-card" onclick="openModal('register')">
+        <div class="plan-period">6 месяцев</div>
+        <div class="plan-price">5 590 <em>₸</em></div>
+        <div class="plan-sub">~932 ₸/мес · экономия 22%</div>
+        <div class="plan-features">
+          <div class="plan-feat">285+ вопросов ЕНТ</div>
+          <div class="plan-feat">Режим тренировки</div>
+          <div class="plan-feat">Приоритетная поддержка</div>
+        </div>
+        <button class="plan-cta plan-cta-outline">КУПИТЬ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust-section">
+    <div style="text-align:center;">
+      <div class="sec-eyebrow" style="display:inline-block;">Нам доверяют</div>
+      <h2 class="sec-title" style="margin-top:8px;">Цифры говорят сами за себя</h2>
+      <p style="color:var(--muted);font-size:0.88rem;margin-top:8px;">Тысячи казахстанских школьников уже готовятся с ENTeshka</p>
+    </div>
+    <div class="trust-grid" id="trustGrid">
+      <div class="trust-card">
+        <div class="trust-icon">👥</div>
+        <div class="trust-num" id="cnt1">0</div>
+        <div class="trust-label">зарегистрированных<br>пользователей</div>
+      </div>
+      <div class="trust-card highlight-card">
+        <div class="trust-icon">📚</div>
+        <div class="trust-num" id="cnt2">0</div>
+        <div class="trust-label">официальных вопросов<br>ЕНТ в базе</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">🏆</div>
+        <div class="trust-num" id="cnt3">0</div>
+        <div class="trust-label">учеников сдали ЕНТ<br>на 17+ баллов</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES SECTION -->
+  <div class="features-section">
+    <div style="text-align:center;margin-bottom:48px;">
+      <div class="sec-eyebrow">Возможности</div>
+      <h2 class="sec-title">Всё для успешной сдачи ЕНТ</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-title">Официальные вопросы</div>
+        <div class="feat-desc">285+ вопросов из реальных ЕНТ — с картами, текстами и схемами</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⏱️</div>
+        <div class="feat-title">Режим ЕНТ</div>
+        <div class="feat-desc">20 вопросов за 24 минуты — точно как на реальном экзамене</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">Статистика</div>
+        <div class="feat-desc">Видишь свой прогресс и слабые темы после каждого теста</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Банк вопросов</div>
+        <div class="feat-desc">Учи вопросы по категориям: древний период, ханство, советский период и другие</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📱</div>
+        <div class="feat-title">С любого устройства</div>
+        <div class="feat-desc">Готовься с телефона, планшета или компьютера в любое время</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Доступ за 1 минуту</div>
+        <div class="feat-desc">Оплата через Kaspi — доступ открываем сразу после оплаты</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEWS SECTION -->
+  <div class="reviews-section">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div class="sec-eyebrow">Отзывы</div>
+      <h2 class="sec-title">Что говорят наши ученики</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">«Сдал историю на 19 баллов! Готовился только через ENTeshka — вопросы совпали с реальным ЕНТ»</div>
+        <div class="review-author">— Айдар С., Алматы</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">«Очень удобно что можно готовиться с телефона. Режим ЕНТ с таймером помогает не паниковать на экзамене»</div>
+        <div class="review-author">— Дана К., Астана</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">«За 2 месяца подготовки прошла все вопросы несколько раз. Получила 20 баллов по истории!»</div>
+        <div class="review-author">— Арайлым Б., Шымкент</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="footer">© 2025 ENTeshka · Все права защищены · <a href="https://t.me/panamera770" style="color:var(--gold);">@panamera770</a></div>
+</div>
+
+<!-- ══════════════════════════════
+     MODAL (popup поверх лендинга)
+══════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabReg" onclick="switchTab('register')">Регистрация</button>
+      <button class="modal-tab" id="tabLog" onclick="switchTab('login')">Войти</button>
+    </div>
+
+    <!-- РЕГИСТРАЦИЯ -->
+    <div id="formReg">
+      <div class="modal-title">Создать аккаунт</div>
+      <div class="modal-desc">Заполните поля — займёт 30 секунд</div>
+      <div class="two-col">
+        <div class="field"><label>Имя</label><input id="rName" type="text" placeholder="Айдар"></div>
+        <div class="field"><label>Фамилия</label><input id="rSur" type="text" placeholder="Сейткали"></div>
+      </div>
+      <div class="field"><label>Логин (a-z, 0-9, _)</label><input id="rLogin" type="text" placeholder="aidar1"></div>
+      <div class="field"><label>Пароль (мин. 6 символов)</label><input id="rPass" type="password" placeholder="••••••"></div>
+      <div class="field"><label>Повторите пароль</label><input id="rPass2" type="password" placeholder="••••••"></div>
+      <div id="rErr" class="err-box"></div>
+      <button class="btn-submit" id="regBtn">СОЗДАТЬ АККАУНТ →</button>
+    </div>
+
+    <!-- ВХОД -->
+    <div id="formLog" class="hidden">
+      <div class="modal-title">Добро пожаловать</div>
+      <div class="modal-desc">Войдите в свой аккаунт ENTeshka</div>
+      <div class="field"><label>Логин</label><input id="lLogin" type="text" placeholder="Ваш логин"></div>
+      <div class="field"><label>Пароль</label><input id="lPass" type="password" placeholder="Ваш пароль"></div>
+      <div id="lErr" class="err-box"></div>
+      <button class="btn-submit" id="logBtn">ВОЙТИ →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     APP (после входа)
+══════════════════════════════ -->
+<div id="app">
+  <nav class="app-nav">
+    <div class="app-logo">ENTE<span>shka</span></div>
+    <div class="app-nav-links">
+      <button class="app-nb active" id="nb-home" onclick="goPage('home')">Главная</button>
+      <button class="app-nb" id="nb-bank" onclick="goPage('bank')">Банк тестов <span class="lock-icon" id="li-bank">🔒</span></button>
+      <button class="app-nb" id="nb-ent" onclick="goPage('ent')">ЕНТ режим <span class="lock-icon" id="li-ent">🔒</span></button>
+      <button class="app-nb" id="nb-prof" onclick="goPage('prof')">Профиль</button>
+    </div>
+    <div class="nav-right">
+      <div class="sub-status" id="subStatus">❌ Нет подписки</div>
+      <div class="user-avatar" id="userAv" onclick="goPage('prof')">АС</div>
+    </div>
+  </nav>
+
+  <div class="app-content">
+
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+      <div class="app-hero">
+        <h2>Добро пожаловать в <span>ENTeshka</span></h2>
+        <p>Официальные вопросы ЕНТ по истории Казахстана и основам права</p>
+        <div class="app-btns">
+          <button class="btn-sky" onclick="goPage('ent')">▶ Начать тест</button>
+          <button class="btn-hero-outline" onclick="goPage('bank')" style="font-size:0.75rem;padding:10px 22px;">Банк вопросов</button>
+        </div>
+        <div class="quick-stats">
+          <div class="qs-card"><div class="qs-num">285+</div><div class="qs-label">Вопросов</div></div>
+          <div class="qs-card"><div class="qs-num">6</div><div class="qs-label">Категорий</div></div>
+          <div class="qs-card"><div class="qs-num">24 мин</div><div class="qs-label">На тест</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANK -->
+    <div id="page-bank" class="page">
+      <div class="bank-head">
+        <h2>Банк <span>тестов</span></h2>
+        <div class="bank-meta" id="bankMeta">285+ вопросов</div>
+        <div class="bank-ctrl">
+          <button class="filt active" onclick="fBank(this,'all')">Все</button>
+          <button class="filt" onclick="fBank(this,'ancient')">Древний период</button>
+          <button class="filt" onclick="fBank(this,'khanate')">Средневековье</button>
+          <button class="filt" onclick="fBank(this,'soviet')">XIX–XX век</button>
+          <button class="filt" onclick="fBank(this,'modern')">Независимость</button>
+          <button class="rev-btn" onclick="toggleAns(this)">● Показать ответы</button>
+        </div>
+      </div>
+      <div class="bank-body">
+        <div id="bankList"></div>
+        <div class="load-more" onclick="loadMore()">+ Ещё 20 вопросов</div>
+      </div>
+    </div>
+
+    <!-- ENT -->
+    <div id="page-ent" class="page">
+      <div id="entStart">
+        <div class="ent-start">
+          <h2>Режим <span>ЕНТ</span></h2>
+          <p>20 случайных вопросов с таймером — как на реальном экзамене</p>
+          <div class="ent-stats-row">
+            <div><div class="es-n">20</div><div class="es-l">Вопросов</div></div>
+            <div><div class="es-n">24</div><div class="es-l">Минуты</div></div>
+            <div><div class="es-n">1 балл</div><div class="es-l">За ответ</div></div>
+          </div>
+          <button class="btn-sky" onclick="startQuiz()">▶ НАЧАТЬ ТЕСТ</button>
+        </div>
+      </div>
+      <div id="entQuiz" class="hidden">
+        <div class="quiz-wrap">
+          <div class="quiz-top">
+            <div class="quiz-qn" id="qNum">Вопрос 1 из 20</div>
+            <div class="quiz-timer" id="qTimer">24:00</div>
+          </div>
+          <div class="quiz-bar"><div class="quiz-fill" id="qFill" style="width:5%"></div></div>
+          <div class="quiz-q" id="qText"></div>
+          <div class="quiz-opts" id="qOpts"></div>
+          <div class="quiz-nav"><button class="btn-next" id="btnNext" onclick="nextQ()" disabled>Далее →</button></div>
+        </div>
+      </div>
+      <div id="entResult" class="hidden">
+        <div class="result-wrap">
+          <div class="res-ring" id="resRing" style="--p:0"><div class="res-pct" id="resPct">0%</div></div>
+          <div class="res-title" id="resTitle">—</div>
+          <div class="res-sub" id="resSub"></div>
+          <div class="res-grid">
+            <div class="res-cell"><div class="res-n" id="rOk" style="color:var(--green)">0</div><div class="res-l">✅ Правильных</div></div>
+            <div class="res-cell"><div class="res-n" id="rBad" style="color:var(--red)">0</div><div class="res-l">❌ Неверных</div></div>
+            <div class="res-cell"><div class="res-n" id="rTime" style="color:var(--sky)">—</div><div class="res-l">⏱ Время</div></div>
+            <div class="res-cell"><div class="res-n" id="rSc" style="color:var(--gold)">0/20</div><div class="res-l">🎯 Счёт</div></div>
+          </div>
+          <button class="btn-sky" onclick="startQuiz()">🔄 Ещё раз</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="page-prof" class="page">
+      <div class="prof-wrap">
+        <div class="prof-head">
+          <div class="prof-av" id="profAv">АС</div>
+          <div>
+            <div class="prof-name" id="profName">Имя Фамилия</div>
+            <div class="prof-login" id="profLogin">@login</div>
+            <div class="prof-badge unpaid" id="profBadge">❌ Подписка не активна</div>
+          </div>
+        </div>
+        <!-- Купить подписку если нет -->
+        <div id="buySubBlock">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;text-align:center;">
+            <div style="font-size:2rem;margin-bottom:12px;">🔒</div>
+            <div style="font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px;">Получите полный доступ</div>
+            <div style="color:var(--muted);font-size:0.83rem;margin-bottom:18px;">Купите подписку чтобы открыть Банк тестов и ЕНТ режим</div>
+            <button class="btn-hero-primary" onclick="goPage('sub')">Выбрать подписку →</button>
+          </div>
+        </div>
+        <!-- Если есть подписка -->
+        <div id="subActiveBlock" class="hidden">
+          <div style="background:rgba(46,204,113,0.05);border:1px solid rgba(46,204,113,0.2);border-radius:14px;padding:20px;margin-bottom:20px;text-align:center;">
+            <div style="color:var(--green);font-size:0.85rem;font-weight:600;">✅ Подписка активна — все разделы доступны!</div>
+          </div>
+        </div>
+        <button onclick="doLogout()" style="display:block;width:100%;padding:12px;border-radius:9px;border:1px solid rgba(231,76,60,0.3);background:transparent;color:var(--red);font-family:'Inter',sans-serif;font-size:0.82rem;cursor:pointer;margin-top:10px;">Выйти из аккаунта</button>
+      </div>
+    </div>
+
+    <!-- SUBSCRIPTION PAGE -->
+    <div id="page-sub" class="page">
+      <div class="sub-page">
+        <h2>Выберите подписку</h2>
+        <p>Напишите нам в Telegram после выбора тарифа — доступ откроем за 1 минуту ⚡</p>
+        <div class="sub-plans">
+          <div class="sp-card" id="sp1" onclick="pickPlan(1)">
+            <div class="sp-dur">1 месяц</div>
+            <div class="sp-price">1 190 <em>₸</em></div>
+            <div class="sp-save"></div>
+          </div>
+          <div class="sp-card sel" id="sp2" onclick="pickPlan(2)">
+            <div class="sp-pop">ВЫГОДНЕЕ</div>
+            <div class="sp-dur">3 месяца</div>
+            <div class="sp-price">2 990 <em>₸</em></div>
+            <div class="sp-save">Экономия 16%</div>
+          </div>
+          <div class="sp-card" id="sp3" onclick="pickPlan(3)">
+            <div class="sp-dur">6 месяцев</div>
+            <div class="sp-price">5 590 <em>₸</em></div>
+            <div class="sp-save">Экономия 22%</div>
+          </div>
+        </div>
+        <div class="how-block">
+          <h3>Как оплатить?</h3>
+          <div class="how-step"><div class="how-num">1</div><div class="how-text">Выберите тариф выше</div></div>
+          <div class="how-step"><div class="how-num">2</div><div class="how-text">Нажмите кнопку «Написать в Telegram» — ваш логин и тариф вставятся автоматически</div></div>
+          <div class="how-step"><div class="how-num">3</div><div class="how-text">Мы пришлём реквизиты Kaspi. После оплаты — <b>доступ за 1 минуту ⚡</b></div></div>
+        </div>
+        <button class="tg-btn" onclick="openTG()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#0D0F14"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.026 9.546c-.149.658-.538.818-1.092.508l-3.017-2.222-1.456 1.401c-.161.161-.296.296-.607.296l.217-3.063 5.576-5.035c.242-.217-.054-.337-.375-.12L7.008 14.6l-2.95-.921c-.641-.201-.655-.641.136-.949l11.536-4.448c.534-.193 1.001.13.832.966z"/></svg>
+          НАПИСАТЬ В TELEGRAM @panamera770
+        </button>
+      </div>
+    </div>
+
+  </div><!-- app-content -->
+</div><!-- app -->
+
+<!-- ══════════════════════════════
+     ADMIN (отдельная страница)
+══════════════════════════════ -->
+<div id="adminPage" style="display:none;min-height:100vh;background:var(--dark);">
+  <div class="admin-wrap">
+    <div class="admin-title">
+      🔧 Админ панель
+      <button onclick="doLogout()" style="padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:0.75rem;font-family:'Inter',sans-serif;">Выйти</button>
+    </div>
+    <div class="admin-card">
+      <div class="admin-ct">➕ Выдать подписку</div>
+      <div class="admin-row">
+        <div class="af"><label>Логин пользователя</label><input id="aLogin" type="text" placeholder="aidar1"></div>
+        <div class="af"><label>Тариф</label><select id="aPlan"><option value="1">1 месяц</option><option value="3" selected>3 месяца</option><option value="6">6 месяцев</option></select></div>
+        <button class="give-btn" onclick="giveAccess()">ВЫДАТЬ</button>
+      </div>
+      <div id="aMsg" class="admin-msg"></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-ct">👥 Все пользователи</div>
+      <div id="userList"><div style="color:var(--muted);text-align:center;padding:16px;font-size:0.82rem;">Пользователей пока нет</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════
+// FIREBASE
+// ════════════════════════
+const FB = 'https://enteshka-default-rtdb.firebaseio.com';
+
+async function fbGet(path){
+  try{const r=await fetch(FB+path+'.json');return await r.json();}catch(e){return null;}
+}
+async function fbSet(path,data){
+  try{await fetch(FB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}catch(e){}
+}
+async function fbPatch(path,data){
+  try{await fetch(FB+path+'.json',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}catch(e){}
+}
+
+// ════════════════════════
+// КОНСТАНТЫ
+// ════════════════════════
+const ADMIN = {login:'admin', pass:'enteshka2025'};
+const PLANS = {1:'1 месяц — 1 190 ₸', 2:'3 месяца — 2 990 ₸', 3:'6 месяцев — 5 590 ₸'};
+let CUR = null;
+let CUR_PLAN = 2;
+let ansVisible = false;
+let bankFilter = 'all';
+let bankShown = 20;
+let testsCount = 0;
+let qqs=[],qIdx=0,qSc=0,qTmr=null,qSec=1440,qStart=0;
+
+// ════════════════════════
+// ЛОКАЛЬНОЕ ХРАНИЛИЩЕ (только текущий юзер)
+// ════════════════════════
+function getMe(){try{return JSON.parse(localStorage.getItem('ENT_ME')||'null');}catch(e){return null;}}
+function setMe(u){localStorage.setItem('ENT_ME',u?JSON.stringify(u):'null');}
+
+// ════════════════════════
+// ПОКАЗ ЭКРАНОВ
+// ════════════════════════
+function showLanding(){
+  document.getElementById('landing').style.display='block';
+  document.getElementById('app').style.display='none';
+  document.getElementById('adminPage').style.display='none';
+}
+function showApp(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('adminPage').style.display='none';
+  updateAppUI();
+  renderBank();
+}
+function showAdmin(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('adminPage').style.display='block';
+  renderUsers();
+}
+
+// ════════════════════════
+// МОДАЛЬНОЕ ОКНО
+// ════════════════════════
+function openModal(tab){
+  document.getElementById('modalOverlay').classList.add('open');
+  switchTab(tab);
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOutside(e){
+  if(e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function switchTab(tab){
+  const isReg = tab === 'register';
+  document.getElementById('formReg').classList.toggle('hidden', !isReg);
+  document.getElementById('formLog').classList.toggle('hidden', isReg);
+  document.getElementById('tabReg').classList.toggle('active', isReg);
+  document.getElementById('tabLog').classList.toggle('active', !isReg);
+  document.getElementById('rErr').style.display='none';
+  document.getElementById('lErr').style.display='none';
+}
+
+// ════════════════════════
+// ОШИБКИ
+// ════════════════════════
+function showErr(id,msg){
+  const el=document.getElementById(id);
+  el.textContent=msg;el.style.display='block';
+}
+
+// ════════════════════════
+// РЕГИСТРАЦИЯ
+// ════════════════════════
+document.getElementById('regBtn').addEventListener('click', async function(){
+  const name  = document.getElementById('rName').value.trim();
+  const sur   = document.getElementById('rSur').value.trim();
+  const login = document.getElementById('rLogin').value.trim().toLowerCase();
+  const pass  = document.getElementById('rPass').value;
+  const pass2 = document.getElementById('rPass2').value;
+  document.getElementById('rErr').style.display='none';
+
+  if(!name||!sur)                return showErr('rErr','⚠️ Введите имя и фамилию');
+  if(login.length<3)             return showErr('rErr','⚠️ Логин минимум 3 символа');
+  if(!/^[a-z0-9_]+$/.test(login)) return showErr('rErr','⚠️ Логин: только a-z, цифры, _');
+  if(pass.length<6)              return showErr('rErr','⚠️ Пароль минимум 6 символов');
+  if(pass!==pass2)               return showErr('rErr','⚠️ Пароли не совпадают');
+
+  // Проверяем существует ли логин в Firebase
+  const regBtn = document.getElementById('regBtn');
+  regBtn.textContent = 'Проверяем...';
+  regBtn.disabled = true;
+
+  const existing = await fbGet('/users/'+login);
+  if(existing){
+    regBtn.textContent = 'СОЗДАТЬ АККАУНТ →';
+    regBtn.disabled = false;
+    return showErr('rErr','⚠️ Логин «'+login+'» уже занят');
+  }
+
+  // Сохраняем в Firebase
+  const userData = {name, sur, login, pass, paid:false, paidUntil:'', createdAt: new Date().toLocaleDateString('ru-RU')};
+  await fbSet('/users/'+login, userData);
+
+  CUR = userData;
+  setMe(CUR);
+  regBtn.textContent = 'СОЗДАТЬ АККАУНТ →';
+  regBtn.disabled = false;
+  closeModal();
+  showApp();
+});
+
+// ════════════════════════
+// ВХОД
+// ════════════════════════
+document.getElementById('logBtn').addEventListener('click', async function(){
+  const login = document.getElementById('lLogin').value.trim().toLowerCase();
+  const pass  = document.getElementById('lPass').value;
+  document.getElementById('lErr').style.display='none';
+
+  if(!login||!pass) return showErr('lErr','⚠️ Заполните все поля');
+
+  if(login===ADMIN.login&&pass===ADMIN.pass){
+    closeModal();
+    showAdmin();
+    return;
+  }
+
+  const logBtn = document.getElementById('logBtn');
+  logBtn.textContent = 'Входим...';
+  logBtn.disabled = true;
+
+  const userData = await fbGet('/users/'+login);
+
+  logBtn.textContent = 'ВОЙТИ →';
+  logBtn.disabled = false;
+
+  if(!userData)              return showErr('lErr','⚠️ Логин не найден — зарегистрируйтесь');
+  if(userData.pass!==pass)   return showErr('lErr','⚠️ Неверный пароль');
+
+  CUR = userData;
+  setMe(CUR);
+  closeModal();
+  showApp();
+});
+
+// ════════════════════════
+// ВЫХОД
+// ════════════════════════
+function doLogout(){
+  setMe(null);CUR=null;
+  showLanding();
+}
+
+// ════════════════════════
+// UI ПРИЛОЖЕНИЯ
+// ════════════════════════
+function updateAppUI(){
+  if(!CUR)return;
+  // Обновляем из Firebase в фоне
+  fbGet('/users/'+CUR.login).then(fresh=>{
+    if(fresh){ CUR=fresh; setMe(CUR); applyUI(); }
+  });
+  applyUI();
+}
+function applyUI(){
+  if(!CUR)return;
+  const ini=(CUR.name[0]||'')+(CUR.sur[0]||'');
+  document.getElementById('userAv').textContent=ini;
+  document.getElementById('profAv').textContent=ini;
+  document.getElementById('profName').textContent=CUR.name+' '+CUR.sur;
+  document.getElementById('profLogin').textContent='@'+CUR.login;
+  if(CUR.paid){
+    document.getElementById('subStatus').textContent='✅ Подписка активна';
+    document.getElementById('subStatus').className='sub-status active';
+    document.getElementById('profBadge').textContent='✅ Подписка активна'+(CUR.paidUntil?' до '+CUR.paidUntil:'');
+    document.getElementById('profBadge').className='prof-badge paid';
+    document.getElementById('buySubBlock').classList.add('hidden');
+    document.getElementById('subActiveBlock').classList.remove('hidden');
+    ['bank','ent'].forEach(id=>{
+      document.getElementById('nb-'+id).classList.remove('locked');
+      const li=document.getElementById('li-'+id);
+      if(li)li.style.display='none';
+    });
+  } else {
+    document.getElementById('subStatus').textContent='❌ Нет подписки';
+    document.getElementById('subStatus').className='sub-status';
+    document.getElementById('profBadge').textContent='❌ Подписка не активна';
+    document.getElementById('profBadge').className='prof-badge unpaid';
+    document.getElementById('buySubBlock').classList.remove('hidden');
+    document.getElementById('subActiveBlock').classList.add('hidden');
+    ['bank','ent'].forEach(id=>document.getElementById('nb-'+id).classList.add('locked'));
+  }
+}
+
+// ════════════════════════
+// НАВИГАЦИЯ ВНУТРИ ПРИЛОЖЕНИЯ
+// ════════════════════════
+function goPage(name){
+  // Если пытается зайти в банк или ент без подписки
+  if((name==='bank'||name==='ent')&&CUR&&!CUR.paid){
+    goPage('sub');
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.app-nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const nb=document.getElementById('nb-'+name);
+  if(nb) nb.classList.add('active');
+}
+
+// ════════════════════════
+// ПОДПИСКА
+// ════════════════════════
+function pickPlan(n){
+  CUR_PLAN=n;
+  [1,2,3].forEach(i=>document.getElementById('sp'+i).classList.toggle('sel',i===n));
+}
+function openTG(){
+  const login=CUR?CUR.login:'???';
+  const msg=encodeURIComponent('Привет! Хочу купить ENTeshka\nЛогин: '+login+'\nТариф: '+PLANS[CUR_PLAN]);
+  window.open('https://t.me/panamera770?text='+msg,'_blank');
+}
+
+// ════════════════════════
+// БАНК
+// ════════════════════════
+function renderBank(){
+  const data=bankFilter==='all'?QS:QS.filter(q=>q.cat===bankFilter);
+  document.getElementById('bankMeta').textContent=data.length+' вопросов';
+  document.getElementById('bankList').innerHTML=data.slice(0,bankShown).map((q,i)=>`
+    <div class="q-block">
+      <div class="q-num">ВОПРОС ${i+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">${q.opts.map((o,oi)=>`<div class="q-opt${ansVisible&&oi===q.ans?' correct':''}">${['А','Б','В','Г'][oi]}) ${o}</div>`).join('')}</div>
+    </div>`).join('');
+}
+function fBank(btn,f){
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');bankFilter=f;bankShown=20;renderBank();
+}
+function toggleAns(btn){
+  ansVisible=!ansVisible;
+  btn.textContent=ansVisible?'● Скрыть ответы':'● Показать ответы';
+  btn.style.color=ansVisible?'var(--red)':'var(--green)';
+  renderBank();
+}
+function loadMore(){bankShown+=20;renderBank();}
+
+// ════════════════════════
+// ТЕСТ
+// ════════════════════════
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
+function startQuiz(){
+  qqs=shuffle(QS).slice(0,20);qIdx=0;qSc=0;qSec=1440;qStart=Date.now();
+  document.getElementById('entStart').classList.add('hidden');
+  document.getElementById('entResult').classList.add('hidden');
+  document.getElementById('entQuiz').classList.remove('hidden');
+  document.getElementById('qTimer').style.color='var(--sky)';
+  if(qTmr)clearInterval(qTmr);
+  qTmr=setInterval(tick,1000);
+  renderQ();
+}
+function tick(){
+  qSec--;
+  if(qSec<=0){clearInterval(qTmr);finishQuiz();return;}
+  const m=String(Math.floor(qSec/60)).padStart(2,'0'),s=String(qSec%60).padStart(2,'0');
+  document.getElementById('qTimer').textContent=m+':'+s;
+  if(qSec<=60)document.getElementById('qTimer').style.color='var(--red)';
+}
+function renderQ(){
+  const q=qqs[qIdx];
+  document.getElementById('qNum').textContent=`Вопрос ${qIdx+1} из 20`;
+  document.getElementById('qFill').style.width=((qIdx+1)/20*100)+'%';
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('btnNext').disabled=true;
+  document.getElementById('btnNext').textContent=qIdx===19?'Завершить ✓':'Далее →';
+  document.getElementById('qOpts').innerHTML=q.opts.map((o,i)=>`
+    <div class="qopt" onclick="pickOpt(this,${i})">
+      <div class="opt-l">${['А','Б','В','Г'][i]}</div>${o}
+    </div>`).join('');
+}
+function pickOpt(el,idx){
+  if(el.classList.contains('right')||el.classList.contains('wrong'))return;
+  document.querySelectorAll('.qopt').forEach(o=>o.style.pointerEvents='none');
+  const q=qqs[qIdx];
+  if(idx===q.ans){el.classList.add('right');qSc++;}
+  else{el.classList.add('wrong');document.querySelectorAll('.qopt')[q.ans].classList.add('right');}
+  document.getElementById('btnNext').disabled=false;
+}
+function nextQ(){qIdx++;if(qIdx>=20)finishQuiz();else renderQ();}
+function finishQuiz(){
+  clearInterval(qTmr);
+  const el=Math.floor((Date.now()-qStart)/1000);
+  const mm=String(Math.floor(el/60)).padStart(2,'0'),ss=String(el%60).padStart(2,'0');
+  document.getElementById('entQuiz').classList.add('hidden');
+  document.getElementById('entResult').classList.remove('hidden');
+  const pct=Math.round(qSc/20*100);
+  document.getElementById('resRing').style.setProperty('--p',pct);
+  document.getElementById('resPct').textContent=pct+'%';
+  document.getElementById('rOk').textContent=qSc;
+  document.getElementById('rBad').textContent=20-qSc;
+  document.getElementById('rTime').textContent=mm+':'+ss;
+  document.getElementById('rSc').textContent=qSc+'/20';
+  const [t,s]=pct>=90?['Отлично! 🏆','Блестящий результат!']:
+               pct>=70?['Хорошо! 👍','Ещё немного практики.']:
+               pct>=50?['Неплохо 📚','Повторите слабые темы.']:
+                       ['Нужно подтянуть 💪','Пройдитесь по банку вопросов.'];
+  document.getElementById('resTitle').textContent=t;
+  document.getElementById('resSub').textContent=s;
+  testsCount++;
+}
+
+// ════════════════════════
+// АДМИН
+// ════════════════════════
+async function giveAccess(){
+  const login=document.getElementById('aLogin').value.trim().toLowerCase();
+  const months=parseInt(document.getElementById('aPlan').value);
+  if(!login){return showAdminMsg('Введите логин',false);}
+
+  const userData = await fbGet('/users/'+login);
+  if(!userData){return showAdminMsg('Пользователь «'+login+'» не найден',false);}
+
+  const until=new Date();until.setMonth(until.getMonth()+months);
+  const updated = {...userData, paid:true, paidUntil:until.toLocaleDateString('ru-RU')};
+  await fbSet('/users/'+login, updated);
+
+  if(CUR&&CUR.login===login){CUR=updated;setMe(CUR);}
+  document.getElementById('aLogin').value='';
+  showAdminMsg('✅ Доступ выдан «'+login+'» до '+updated.paidUntil,true);
+  renderUsers();
+}
+
+function showAdminMsg(text,ok){
+  const el=document.getElementById('aMsg');
+  el.textContent=text;el.style.display='block';
+  el.style.background=ok?'rgba(46,204,113,0.1)':'rgba(231,76,60,0.1)';
+  el.style.color=ok?'var(--green)':'var(--red)';
+}
+
+async function revokeAccess(login){
+  const userData = await fbGet('/users/'+login);
+  if(!userData)return;
+  await fbPatch('/users/'+login, {paid:false, paidUntil:''});
+  renderUsers();
+}
+
+async function renderUsers(){
+  const list=document.getElementById('userList');
+  list.innerHTML='<div style="color:var(--muted);text-align:center;padding:16px;font-size:0.82rem;">Загружаем...</div>';
+
+  const users = await fbGet('/users');
+  if(!users){
+    list.innerHTML='<div style="color:var(--muted);text-align:center;padding:16px;font-size:0.82rem;">Пользователей пока нет</div>';
+    return;
+  }
+  const arr=Object.values(users);
+  if(!arr.length){
+    list.innerHTML='<div style="color:var(--muted);text-align:center;padding:16px;font-size:0.82rem;">Пользователей пока нет</div>';
+    return;
+  }
+  list.innerHTML=arr.map(u=>`
+    <div class="user-row">
+      <div class="ur-av">${(u.name[0]||'?')+(u.sur[0]||'?')}</div>
+      <div class="ur-info">
+        <div class="ur-name">${u.name} ${u.sur}</div>
+        <div class="ur-login">@${u.login}${u.paidUntil?' · до '+u.paidUntil:''}${u.createdAt?' · рег. '+u.createdAt:''}</div>
+      </div>
+      <div class="ur-badge ${u.paid?'badge-on':'badge-off'}">${u.paid?'✓ Активна':'Нет'}</div>
+      ${u.paid
+        ?`<button class="sm-btn sm-btn-red" onclick="revokeAccess('${u.login}')">Отозвать</button>`
+        :`<button class="sm-btn sm-btn-gold" onclick="document.getElementById('aLogin').value='${u.login}'">Выдать</button>`}
+    </div>`).join('');
+}
+
+// ════════════════════════
+// СЧЁТЧИКИ С АНИМАЦИЕЙ
+// ════════════════════════
+function animateCounter(el, target, suffix, duration){
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(()=>{
+    start += step;
+    if(start >= target){
+      start = target;
+      clearInterval(timer);
+    }
+    el.textContent = Math.floor(start).toLocaleString('ru') + suffix;
+  }, 16);
+}
+
+// Запускаем когда секция попадает в поле зрения
+const trustObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      animateCounter(document.getElementById('cnt1'), 789, '+', 2000);
+      animateCounter(document.getElementById('cnt2'), 285, '+', 1800);
+      animateCounter(document.getElementById('cnt3'), 621, '+', 2200);
+      trustObserver.disconnect();
+    }
+  });
+}, {threshold: 0.3});
+
+const trustGrid = document.getElementById('trustGrid');
+if(trustGrid) trustObserver.observe(trustGrid);
+
+// ════════════════════════
+// АВТОВХОД
+// ════════════════════════
+(async function(){
+  const saved=getMe();
+  if(!saved||!saved.login)return;
+  // Обновляем данные из Firebase
+  const fresh = await fbGet('/users/'+saved.login);
+  if(!fresh){setMe(null);return;}
+  CUR=fresh;setMe(CUR);
+  showApp();
+})();
+
+// ════════════════════════
+// ВОПРОСЫ
+// ════════════════════════
+const QS=[
+  // ── ДРЕВНИЙ ПЕРИОД ──
+  {cat:'ancient',q:'В каком веке на территории Казахстана появилось государство Канглы?',opts:['II–I вв. до н.э.','IV–V вв. н.э.','VII–VIII вв. н.э.','X–XI вв. н.э.'],ans:0},
+  {cat:'ancient',q:'Как называлось объединение кочевых племён III в. до н.э. — IV в. н.э.?',opts:['Хунну','Тюрки','Монголы','Саки'],ans:0},
+  {cat:'ancient',q:'Первые письменные свидетельства о саках относятся к:',opts:['VII в. до н.э.','X в. до н.э.','III в. до н.э.','I в. н.э.'],ans:0},
+  {cat:'ancient',q:'Государство Усунь располагалось преимущественно в:',opts:['Семиречье','Приаралье','Прикаспии','Центральном Казахстане'],ans:0},
+  {cat:'ancient',q:'Вождь саков Томирис победила войска:',opts:['Кира II Великого','Александра Македонского','Дария I','Ксеркса'],ans:0},
+  {cat:'ancient',q:'Андроновская культура эпохи бронзы датируется:',opts:['XVIII–IX вв. до н.э.','V–III вв. до н.э.','III–I вв. до н.э.','I–III вв. н.э.'],ans:0},
+  {cat:'ancient',q:'Какое государство располагалось в Южном Казахстане в I тыс. н.э.?',opts:['Кангюй','Хунну','Динлин','Тохары'],ans:0},
+  {cat:'ancient',q:'В конце III в. до н.э. правитель гуннов Модэ покорил племена:',opts:['Ферганы, Хорасана','Тибета, Китая','Согдианы, Персии','Саян, Алтая'],ans:3},
+  {cat:'ancient',q:'Саки связывали движение солнечной колесницы с богом:',opts:['Агни','Митры','Велеса','Ягмы'],ans:1},
+  {cat:'ancient',q:'Сакские земли в отношениях с ахеменидами:',opts:['Царь саков был подданным','Царь саков был союзником','Входили в ахеменидскую сатрапию','Не было отношений'],ans:2},
+  {cat:'ancient',q:'Верховная власть у усуней принадлежала правителю:',opts:['Шаньюй','Куньби','Гурхан','Каган'],ans:1},
+  {cat:'ancient',q:'Резиденция правителя усуней:',opts:['Суяб','Тараз','Чигу','Алмалык'],ans:2},
+  {cat:'ancient',q:'Формирование казахского этноса задержало нашествие:',opts:['Монголов','Арабов','Джунгар','Тимуридов'],ans:0},
+  {cat:'ancient',q:'Ювелирный стиль в одежде Золотого человека:',opts:['Полихромный','Звериный','Антропоморфный','Зооморфный'],ans:1},
+  {cat:'ancient',q:'Преемник царя Кира Великого:',opts:['Дарий I','Ксеркс','Камбис','Артаксеркс'],ans:0},
+  {cat:'ancient',q:'Курганы с «усами» относятся к культуре:',opts:['Андроновской','Срубной','Тасмолинской','Бегазы-Дандыбаевской'],ans:2},
+  {cat:'ancient',q:'В эпоху бронзы на территории Мургабского оазиса существовала культура:',opts:['Андроновская','Срубная','Маргуш','Карасукская'],ans:2},
+  {cat:'ancient',q:'Природный фактор возникновения кочевой культуры:',opts:['Разнообразный рельеф','Аридный климат','Лесной ландшафт','Бессточные бассейны'],ans:1},
+  {cat:'ancient',q:'Представитель высшего сословия кара суйек:',opts:['Ходжа','Султан','Бий','Бай'],ans:1},
+  {cat:'ancient',q:'Традиционный семиструнный щипковый инструмент:',opts:['Керней','Адырна','Шанкобыз','Жетиген'],ans:3},
+  {cat:'ancient',q:'Певцы профессиональной школы Центрального и Восточного Казахстана:',opts:['Курмангазы и Таттикара','Даулеткерей и Жаяу Муса','Таттимбет и Казангап','Акан Серы и Биржан Сал'],ans:3},
+  {cat:'ancient',q:'Верные утверждения о средневековом Отраре: II. Здесь монетный двор Караханидов; IV. Компактная зона кочевой и земледельческой культур:',opts:['I, III','II, III','II, IV','III, IV'],ans:2},
+
+  // ── СРЕДНЕВЕКОВЬЕ И ХАНСТВО ──
+  {cat:'khanate',q:'Столица государства найманов:',opts:['Балыкты','Испиджаб','Алмалык','Битобе'],ans:0},
+  {cat:'khanate',q:'Государство в Восточном Дешт-и-Кыпчаке XIII–XV вв.:',opts:['Золотая Орда','Ак Орда','Кок Орда','Ногайская Орда'],ans:1},
+  {cat:'khanate',q:'Могулистан располагался на территории:',opts:['Улуса Чагатая','Улуса Джучи','Улуса Тулуя','Улуса Угэдэя'],ans:0},
+  {cat:'khanate',q:'Столица Могулистана (карта: государство №1):',opts:['Суяб','Тараз','Алмалык','Сыгнак'],ans:2},
+  {cat:'khanate',q:'Территория Могулистана по «Тарих-и-Рашиди» в XIV–XVI вв.:',opts:['Мавераннахр и Алтай','Семиречье и Кыргызстан','Сырдарья и Узбекистан','Таджикистан и Хорезм'],ans:1},
+  {cat:'khanate',q:'Историческая роль Могулистана: от Золотой Орды отделились:',opts:['Завершилось объединение Семиречья','Введены законы «Яса»','Ослабление Мамая','Потомки Орда-Еджена'],ans:3},
+  {cat:'khanate',q:'Основатель государства Ак Орда (государство №1 на карте):',opts:['Бумын','Мукан','Абулхаир','Пуладчи'],ans:2},
+  {cat:'khanate',q:'Во главе диуана в Золотой Орде стоял:',opts:['Бек','Баскак','Беклербек','Визирь'],ans:3},
+  {cat:'khanate',q:'Постоянная столица Казахского ханства в XVII в.:',opts:['Туркестан','Ташкент','Сарайчик','Сыгнак'],ans:0},
+  {cat:'khanate',q:'Курултай трёх жузов в 1710 г. состоялся в:',opts:['Туркестане','Ташкенте','Каракумах','Сауране'],ans:2},
+  {cat:'khanate',q:'В каком году основано Казахское ханство?',opts:['1465','1380','1510','1600'],ans:0},
+  {cat:'khanate',q:'Основатели Казахского ханства:',opts:['Керей и Жанибек','Тауке и Аблай','Абулхаир и Едиге','Касым и Хакназар'],ans:0},
+  {cat:'khanate',q:'При каком хане ханство достигло расцвета в начале XVI в.?',opts:['Касым хан','Абылай хан','Тауке хан','Жангир хан'],ans:0},
+  {cat:'khanate',q:'«Жеті жарғы» принят при хане:',opts:['Тауке','Касым','Абылай','Хакназар'],ans:0},
+  {cat:'khanate',q:'Трагедия «Ақтабан шұбырынды» произошла в:',opts:['1723','1750','1710','1780'],ans:0},
+  {cat:'khanate',q:'Замена улусной системы жузовой — хан:',opts:['Касым','Тауке','Аблай','Хакназар'],ans:1},
+  {cat:'khanate',q:'Советник хана Абылая:',opts:['Толе би','Бухар Калкаманулы','Казыбек би','Айтеке би'],ans:1},
+  {cat:'khanate',q:'Борьба с сибирским ханом Кучумом — хан:',opts:['Есим','Тауекел','Тауке','Абулхаир'],ans:1},
+  {cat:'khanate',q:'Россия после посольства Тауекела:',opts:['Арестовала послов','Заключила союз','Договорилась против Бухары','Не обещала союзнических действий'],ans:3},
+  {cat:'khanate',q:'Годы правления хана Хакназара:',opts:['1538–1580','1537–1583','1539–1582','1540–1581'],ans:0},
+  {cat:'khanate',q:'Хан Хакназар вступил в отношения с царём:',opts:['Иваном Мудрым','Иваном III','Иваном II','Иваном IV'],ans:3},
+  {cat:'khanate',q:'Абылай хан во внешней политике стремился к:',opts:['Захвату Кыргызстана','Отдалению от России','Захвату Ирана','Ослаблению джунгар'],ans:3},
+  {cat:'khanate',q:'10 октября 1731 г. принял присягу России:',opts:['Тауке','Абулхаир','Жангир','Аблай'],ans:1},
+  {cat:'khanate',q:'Ногайская Орда обособилась при:',opts:['Едыге','Мухаммаде','Нур-ад-Дине','Пуладчи'],ans:2},
+  {cat:'khanate',q:'Союзник огузов против Хазарского каганата:',opts:['Хорезм','Иран','Киевская Русь','Китай'],ans:2},
+  {cat:'khanate',q:'Главнокомандующий войсками огузов:',opts:['Кюль-еркины','Атабеки','Шад-тутук','Сюбаши'],ans:3},
+  {cat:'khanate',q:'Результат внешней политики огузов в X в.:',opts:['Достигли Кавказа','Достигли Алтая','Захватили Дешт-и-Кыпчак','Дошли до Дуная'],ans:0},
+  {cat:'khanate',q:'Причина ослабления государства огузов:',opts:['Восстания против налогов','Захват Волжскими булгарами','Приход карлуков','Борьба с печенегами'],ans:0},
+  {cat:'khanate',q:'Правители рода катаган в период правления Есима:',opts:['Подчинялись хану','Воевали с джунгарами','Отказались подчиняться хану','Стали союзниками'],ans:2},
+
+  // ── XIX–XX ВЕК ──
+  {cat:'soviet',q:'Автор реформы 1822 года:',opts:['П. Эссен','Н. Коншин','М. Сперанский','А. Гейнс'],ans:2},
+  {cat:'soviet',q:'Количество административных единиц по реформе 1822 г.:',opts:['Семь','Четыре','Пять','Три'],ans:3},
+  {cat:'soviet',q:'Руководители с хозяйственными и полицейскими функциями по реформе 1822 г.:',opts:['Старшина и атабеки','Волостные управители и аульные старшины','Генерал-губернатор','Старший султан и визири'],ans:1},
+  {cat:'soviet',q:'Верный порядок выборов по реформе 1822 г.:',opts:['Заседатели избирались султанами','Султаны на 5 лет','Старший султан биями','Аульные старшины кочевниками'],ans:3},
+  {cat:'soviet',q:'Главная цель реформы 1822 г.:',opts:['Разделить край','Отстранить султанов','Переселение крестьян','Ликвидация ханской власти'],ans:3},
+  {cat:'soviet',q:'В 1801 году на правобережье Урала создана:',opts:['Внутренняя Орда','Илецкая защита','Уральская область','Уилская ярмарка'],ans:0},
+  {cat:'soviet',q:'Колониальная сущность реформ XIX в.: земли объявлялись:',opts:['Собственностью казахов','Собственностью общины','Собственностью государства','Собственностью казачества'],ans:2},
+  {cat:'soviet',q:'Кибиточная подать по реформам 60-х гг. XIX в.:',opts:['Одинакова для всех','Раз в три года','Различалась по территориям','Не взималась с коренных'],ans:2},
+  {cat:'soviet',q:'Реформы ханства 1841 г. направлены на:',opts:['Ликвидацию традиций','Демократизацию','Жёсткую централизацию','Восстановление биев'],ans:2},
+  {cat:'soviet',q:'Уезд Западно-Сибирского генерал-губернаторства:',opts:['Казалинский','Илецкий','Перовский','Омский'],ans:3},
+  {cat:'soviet',q:'Акмолинск входил в (по карте):',opts:['Астраханскую губернию','Западно-Сибирское ген.-губернаторство','Закаспийскую область','Оренбургское ген.-губернаторство'],ans:1},
+  {cat:'soviet',q:'Области Туркестанского генерал-губернаторства (по карте):',opts:['Сырдарьинская и Семиреченская','Закаспийская и Астраханская','Уральская и Тургайская','Акмолинская и Семипалатинская'],ans:0},
+  {cat:'soviet',q:'Соответствие областей и уездов: Семиреченская-Капальский; Уральская-Гурьевский; Семипалатинская-Павлодарский:',opts:['1-Б, 2-В, 3-А','1-В, 2-А, 3-Б','1-А, 2-В, 3-Б','1-Б, 2-А, 3-В'],ans:0},
+  {cat:'soviet',q:'Переселенцы Новоилецкой линии позднее:',opts:['Стали казачеством','Стали торговцами','Основали крепость Верный','Участвовали в войне 1773–1775'],ans:0},
+  {cat:'soviet',q:'Основная причина адм.-терр. реформ:',opts:['Сохранить чингизидов','Создать окружные приказы','Открыть Пограничный суд','Потребность в сырье и рабочей силе'],ans:3},
+  {cat:'soviet',q:'Период восстания Исатая Тайманова (по карте Младший жуз):',opts:['80–90 гг. XIX в.','30–40 гг. XIX в.','80–90 гг. XVIII в.','50–70 гг. XVIII в.'],ans:1},
+  {cat:'soviet',q:'Руководитель нац.-освободительного движения (карта Младший жуз):',opts:['Ж. Тиленшиулы','И. Тайманулы','С. Датулы','Ж. Нурмухамедулы'],ans:1},
+  {cat:'soviet',q:'Основной район действий восставших Исатая (по карте):',opts:['Низовья Иртыша','Есил и Ишим','Тобол и Кокшетау','Жем и Сагыз'],ans:3},
+  {cat:'soviet',q:'Хан, убитый отрядом С. Датулы весной 1797 г. (по карте):',opts:['Нуралы','Есим','Айшуак','Ералы'],ans:3},
+  {cat:'soviet',q:'Требование Исатая к Ханскому совету:',opts:['Улучшить Старший жуз','Создать Окружной приказ','Расправы в Младшем жузе','Прекратить барымту'],ans:3},
+  {cat:'soviet',q:'Отряд «мергенов» в 1916 году возглавлял:',opts:['Кейки батыр','Нияз би','Амангельды батыр','Абдыгаппар хан'],ans:0},
+  {cat:'soviet',q:'Лидер восстания 1916 г. в Букеевской Орде:',opts:['С. Мендешев','Т. Бокин','А. Жангелдин','Б. Ашекеев'],ans:3},
+
+  // ── ЯРМАРКИ И ПРОМЫШЛЕННОСТЬ (по тексту) ──
+  {cat:'soviet',q:'Текст о ярмарках: самая известная ярмарка Каркаралинского уезда:',opts:['Жаркентская','Каркаринская','Кояндинско-Ботовская','Чарская'],ans:2},
+  {cat:'soviet',q:'Текст о ярмарках: отрасли наиболее распространённые в крае в начале XX в.:',opts:['Рыболовная и золотодобывающая','Животноводческая и нефтяная','Золотодобывающая и нефтяная','Перерабатывающая и рыболовная'],ans:2},
+  {cat:'soviet',q:'Текст о ярмарках: рудник по добыче угля в начале XX в.:',opts:['Кокчетавский','Карагандинский','Кустанайский','Чимкентский'],ans:1},
+  {cat:'soviet',q:'Текст о ярмарках: регион добычи цветных металлов:',opts:['Алтай и Центральный Казахстан','Южная Сибирь и Восток','Жетысу и Юг','Жетысу и Центр'],ans:0},
+  {cat:'soviet',q:'Текст о ярмарках: в 1900 г. в Казахстане функционировало ярмарок:',opts:['86','96','106','116'],ans:2},
+  {cat:'soviet',q:'Текст о ярмарках: верные суждения о промышленности КЗ начала XX в.:',opts:['I, IV','IV, III','II, III','II, I'],ans:0},
+  {cat:'soviet',q:'Товары из Центральной Азии на ярмарках:',opts:['Ковры, шелк, седла, сухофрукты','Халаты, посуда, мука, чай','Кожа, овчина, шерсть','Зерно, масло, свечи'],ans:0},
+  {cat:'soviet',q:'Эквивалент торговли России со степью в XIX в.:',opts:['10 пудов муки','3 метра шелка','10 пудов сахара','Годовалые бараны'],ans:3},
+  {cat:'soviet',q:'Чарская ярмарка находилась в уезде:',opts:['Каркаралинском','Верненском','Акмолинском','Семипалатинском'],ans:0},
+  {cat:'soviet',q:'Крупная ярмарка Уральской области:',opts:['Уильская','Таиншыкульская','Аулие-Атинская','Петровская'],ans:0},
+
+  // ── ТУРКЕСТАНО-СИБИРСКАЯ МАГИСТРАЛЬ (по тексту и картине) ──
+  {cat:'soviet',q:'Турксиб соединил регионы:',opts:['Среднюю Азию и Сибирь','Семиречье и Мангыстау','Южный и Северный Казахстан','Среднюю Азию и Центральную Россию'],ans:2},
+  {cat:'soviet',q:'Исторический период на картине «Туркестано-Сибирская магистраль»:',opts:['ВОВ','Социалистическая индустриализация','Послевоенное восстановление','Коллективизация'],ans:1},
+  {cat:'soviet',q:'Автор картины «Туркестано-Сибирская магистраль»:',opts:['К. Тельжанов','Г. Хлудов','В. Верещагин','А. Кастеев'],ans:0},
+  {cat:'soviet',q:'Хронология строительства Турксиба:',opts:['Конец 30-х – нач. 40-х','Вторая пол. 20-х – нач. 30-х','Начало 40-х','Вторая пол. 30-х'],ans:1},
+  {cat:'soviet',q:'Результат влияния Туркестано-Сибирской железной дороги:',opts:['Расширение внешнеторговых связей с Китаем','Увеличение поставок продовольствия','Подъём экономики и культуры восточных районов','Уменьшение сырьевой направленности'],ans:2},
+
+  // ── АЛАШ ──
+  {cat:'soviet',q:'Партия «Алаш» — газета:',opts:['«Айкап»','«Уш жуз»','«Казах»','«Серке»'],ans:2},
+  {cat:'soviet',q:'Организатор газеты «Серке»:',opts:['М. Шокай','Б. Каратаев','М. Тынышпаев','М. Дулатов'],ans:3},
+  {cat:'soviet',q:'Области Алашской автономии:',opts:['Акмолинская, Сырдарьинская','Акмолинская, Уральская, Тургайская, Семипалатинская, Семиреченская','Акмолинская, Уральская, Тургайская','Уральская, Семиреченская, Тургайская'],ans:1},
+  {cat:'soviet',q:'Первый Всеказахский съезд 1917 г. прошёл в:',opts:['Алматы','Ташкенте','Семипалатинске','Оренбурге'],ans:3},
+  {cat:'soviet',q:'Форма государственности по программе «Алаш»:',opts:['Федерация','Конфедерация','Унитарное государство','Автономия'],ans:3},
+  {cat:'soviet',q:'Текст программы «Алаш»: определите партию:',opts:['«Азат»','«Уш жуз»','«Алаш»','«Шуро-ислами»'],ans:2},
+
+  // ── БАЙТУРСЫНОВ И РЫСКУЛОВ (по тексту) ──
+  {cat:'soviet',q:'Байтурсынов и Рыскулов в 1920-30-х гг. пытались донести до СССР о депрессии в годы:',opts:['Насильственной коллективизации','Гражданской войны','Освоения целины','Перестройки'],ans:0},
+  {cat:'soviet',q:'Байтурсынов и Рыскулов в контексте отстаивали интересы:',opts:['Либерального движения','Радикального движения','Буржуазной интеллигенции','Казахского народа'],ans:3},
+  {cat:'soviet',q:'Байтурсынов и Рыскулов стали жертвами репрессий потому что:',opts:['Отстаивали интересы таджиков','Руководили восстанием 1916 г.','Добивались выхода КазАССР из СССР','Отстаивали интересы казахского народа'],ans:3},
+  {cat:'soviet',q:'В каком году КЗ стал ССР?',opts:['1936','1920','1925','1940'],ans:0},
+  {cat:'soviet',q:'Голод 1931–1933 гг. унёс жизни:',opts:['1,5 млн','500 тыс.','3 млн','100 тыс.'],ans:0},
+  {cat:'soviet',q:'Освоение целины началось в:',opts:['1954','1960','1948','1965'],ans:0},
+  {cat:'soviet',q:'Семипалатинский полигон открыт в:',opts:['1949','1955','1962','1970'],ans:0},
+  {cat:'soviet',q:'Декабрьские события 1986 г.:',opts:['Желтоқсан','Қанды қаңтар','Алтай тауы','Азаттық'],ans:0},
+  {cat:'soviet',q:'Против распашки целины выступал:',opts:['Д. Кунаев','К. Сатбаев','И. Юсупов','Ж. Шаяхметов'],ans:1},
+  {cat:'soviet',q:'Под Акмолинском создан:',opts:['Женский лагерь','Научный институт','Совхоз','Колония для несовершеннолетних'],ans:0},
+  {cat:'soviet',q:'Репрессии привели к:',opts:['Ослаблению давления','Строительству социализма','Единению народа','Сети лагерей'],ans:3},
+  {cat:'soviet',q:'Реабилитация жертв началась в период:',opts:['Перестройки','Оттепели','Застоя','Сталинизма'],ans:1},
+  {cat:'soviet',q:'Причина голода 1921–1922 гг.:',opts:['Засуха','Политика «военного коммунизма»','Целина','Коллективизация'],ans:1},
+  {cat:'soviet',q:'Год прекращения ядерных испытаний:',opts:['1963','1970','1975','1980'],ans:0},
+  {cat:'soviet',q:'Причина митингов в Целинограде 1979 г.:',opts:['Образование Немецкой автономной области','Голод','Закрытие предприятий','Протест против целины'],ans:0},
+  {cat:'soviet',q:'Атаман, завладевший ж/д Оренбург-Ташкент в 1918 г.:',opts:['Б. Анненков','А. Деникин','А. Дутов','А. Колчак'],ans:2},
+  {cat:'soviet',q:'Верное суждение о Гражданской войне в КЗ:',opts:['Армии Врангеля, Деникина, Колчака','Жангильдин доставил оружие на Актюбинский фронт','Белая армия захватила весь КЗ','Анненков воевал на Восточном фронте'],ans:1},
+  {cat:'soviet',q:'Верные утверждения о Бауржане Момыш-улы:',opts:['II, III','I, IV','III, IV','I, III'],ans:1},
+  {cat:'modern',q:'Год независимости Казахстана:',opts:['1991','1990','1992','1993'],ans:0},
+  {cat:'modern',q:'Первый президент Казахстана:',opts:['Нурсултан Назарбаев','Касым-Жомарт Токаев','Динмухамед Кунаев','Серикбол Кондыбай'],ans:0},
+  {cat:'modern',q:'Столица перенесена из Алматы в Астану в:',opts:['1997','2000','1991','2005'],ans:0},
+  {cat:'modern',q:'EXPO-2017 прошла в:',opts:['Астане','Алматы','Шымкенте','Актобе'],ans:0},
+  {cat:'modern',q:'Конституция РК принята в:',opts:['1995','1991','2001','1998'],ans:0},
+  {cat:'modern',q:'Декларация о суверенитете КазССР принята:',opts:['25 октября 1990','16 декабря 1991','28 января 1993','30 августа 1995'],ans:0},
+  {cat:'modern',q:'Казахстан первым в мире добровольно отказался от:',opts:['Ядерного оружия','Химического оружия','Биологического оружия','Обычных вооружений'],ans:0},
+  {cat:'modern',q:'Первое государство, признавшее независимость КЗ:',opts:['Россия','США','Турция','Китай'],ans:2},
+  {cat:'modern',q:'Саммит ОБСЕ 2010 г. прошёл в:',opts:['Алматы','Астане','Шымкенте','Актобе'],ans:1},
+  {cat:'modern',q:'Приоритетный партнёр КЗ в освоении космоса (по схеме):',opts:['США','Россия','Китай','Узбекистан'],ans:1},
+  {cat:'modern',q:'Центральноазиатские страны СНГ (по схеме):',opts:['Китай, Россия, Туркмения','Казахстан, Кыргызстан, Украина','Россия, Узбекистан, Таджикистан','Казахстан, Узбекистан, Кыргызстан'],ans:3},
+  {cat:'modern',q:'Основы казахской советской государственности впервые определила:',opts:['Конституция КазАССР','Декларация прав трудящихся КазАССР','Декларация о суверенитете','Закон о независимости'],ans:1},
+  {cat:'modern',q:'Соответствие: Россия-космос, США-инвестиции, Турция-СП:',opts:['1-А, 2-В, 3-Б','1-В, 2-Б, 3-А','1-Б, 2-В, 3-А','1-Б, 2-А, 3-В'],ans:0},
+  {cat:'modern',q:'Международная организация, саммит которой в 2010 г. в Астане:',opts:['ООН','ОБСЕ','ОДКБ','ЮНЕСКО'],ans:1},
+
+  // ── ВОПРОСЫ ПО ТЕКСТУ: ОГУЗЫ ──
+  {cat:'khanate',q:'Текст об огузах: «В конце X – начале XI в. в государстве огузов действовала система налоговых сборов... В 965 г. в союзе с Киевской Русью они разгромили Хазарский каганат... В X в. территория от Сырдарьи до Кавказа называлась «Огузской степью»... В Центральной Азии завоёвывают кыпчаки». Определите результат внешней политики огузов в X в.:',opts:['Продвинулись до Дуная','Захватили Восточный Дешт-и-Кыпчак','На востоке достигли Алтая','На западе достигли земель Кавказа'],ans:3},
+  {cat:'khanate',q:'Текст об огузах: «В конце X – начале XI в. в государстве огузов действовала система налоговых сборов... К середине XI в. господствующее положение... В Центральной Азии завоёвывают кыпчаки». Используя контекст, определите причину ослабления государства огузов:',opts:['Восстания племён против высоких налогов','Приход карлуков в Семиречье','Длительная борьба с печенегами','Захват территории Волжскими Булгарами'],ans:0},
+
+  // ── ВОПРОСЫ ПО ТЕКСТУ: САКИ (ЗОЛОТОЙ ЧЕЛОВЕК) ──
+  {cat:'ancient',q:'Текст о саках: «Одежду саки шили из разных материалов – хлопка, шерстяных тканей, войлока, кожи, меха... Знатный сакский юноша, погребённый в кургане, был одет в сшитую из алой замши одежду, украшенную золотыми пластинами. На нём были узкие кожаные штаны, высокие сапоги... Сапоги и камзол были обшиты бляхами в виде трилистника, а ворот и рукава – бляхами с изображением тигриной головы». Определите ювелирный стиль:',opts:['Полихромный','Звериный','Антропоморфный','Зооморфный'],ans:1},
+
+  // ── ВОПРОСЫ ПО КАРТЕ: ВОССТАНИЕ ИСАТАЯ ТАЙМАНОВА ──
+  {cat:'soviet',q:'По карте «Восстание Исатая Тайманова»: определите основной район действий восставших:',opts:['Низовья Иртыша','Есил и Ишим','Тобол и Кокшетау','Жем и Сагыз'],ans:3},
+  {cat:'soviet',q:'По карте восстания: определите хана, умершего от рук отряда С. Датулы, ходе набега на ханскую ставку весной 1797 года:',opts:['Нуралы','Есим','Айшуак','Ералы'],ans:3},
+  {cat:'soviet',q:'По карте восстания: определите руководителя национально-освободительного движения:',opts:['Ж. Тиленшиулы','И. Тайманулы','С. Датулы','Ж. Нурмухамедулы'],ans:1},
+  {cat:'soviet',q:'По карте восстания: определите период национально-освободительного движения:',opts:['80–90 годы XIX века','30–40 годы XIX века','80–90 годы XVIII века','50–70 годы XVIII века'],ans:1},
+  {cat:'soviet',q:'По карте восстания: определите одно из требований предводителя перед Ханским советом:',opts:['Выступил за улучшение положения в Старшем жузе','Выступил за создание Окружного приказа','Выступил за создание расправ в Младшем жузе','Выступил за прекращение межродовой барымты'],ans:3},
+
+  // ── ВОПРОСЫ ПО КАРТЕ: ГЕНЕРАЛ-ГУБЕРНАТОРСТВА ──
+  {cat:'soviet',q:'По карте административного деления КЗ: определите административную единицу, в которую вошёл Акмолинск:',opts:['Астраханская губерния','Западно-Сибирское генерал-губернаторство','Закаспийская область','Оренбургское генерал-губернаторство'],ans:1},
+  {cat:'soviet',q:'По карте: определите области, вошедшие в состав Туркестанского генерал-губернаторства:',opts:['Сырдарьинская и Семиреченская','Закаспийская и Астраханская','Уральская и Тургайская','Акмолинская и Семипалатинская'],ans:0},
+  {cat:'soviet',q:'По карте: установите соответствие между областью и уездами. 1.Семиреченская; 2.Уральская; 3.Семипалатинская / А.Павлодарский, Каркаралинский; Б.Капальский, Сергиопольский; В.Гурьевский, Эмбинский:',opts:['1-Б, 2-В, 3-А','1-Б, 2-А, 3-В','1-А, 2-В, 3-Б','1-В, 2-Б, 3-А'],ans:0},
+
+  // ── ВОПРОСЫ ПО КАРТЕ: ГРАЖДАНСКАЯ ВОЙНА ──
+  {cat:'soviet',q:'По карте «Казахстан в годы Гражданской войны»: определите белогвардейского атамана, который в 1918 году завладел железной дорогой Оренбург–Ташкент:',opts:['Б. Анненков','А. Деникин','А. Дутов','А. Колчак'],ans:2},
+  {cat:'soviet',q:'По карте Гражданской войны: выберите верное суждение:',opts:['На территории КЗ действовали армии Врангеля, Деникина, Колчака','Экспедиция А.Жангильдина доставила вооружение на Актюбинский фронт','В 1919 г. Белая армия захватила всю территорию Казахстана','Армия атамана Анненкова воевала на Восточном фронте'],ans:1},
+
+  // ── ВОПРОСЫ ПО СХЕМЕ: РЕФОРМА 1822 ГОДА ──
+  {cat:'soviet',q:'По схеме «Административное деление Среднего жуза по реформе 1822 г.» (аул–старшина 3 года; волость–волостной управитель 3 года; внешний округ–старший султан 3 года): назовите автора реформы:',opts:['П. Эссен','Н. Коншин','М. Сперанский','А. Гейнс'],ans:2},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: определите количество административно-территориальных единиц:',opts:['Семь','Четыре','Пять','Три'],ans:3},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: определите руководителей, осуществляющих хозяйственные и полицейские функции:',opts:['Старшина и атабеки','Волостные управители и аульные старшины','Генерал-губернатор и волостные управители','Старший султан и везири'],ans:1},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: определите верный порядок выборов во внешних округах:',opts:['Заседатели от почётных казахов избирались султанами','Султаны избирались на пять лет','Старший султан избирался биями','Аульные старшины выбирались кочевниками'],ans:3},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: назовите основную цель реформ:',opts:['Деление края на три генерал-губернаторства','Окончательное отстранение от власти султанов','Подготовка почвы для массового переселения крестьян','Ликвидация ханской власти'],ans:3},
+
+  // ── ВОПРОСЫ ПО СХЕМЕ: ВНЕШНЯЯ ПОЛИТИКА ──
+  {cat:'modern',q:'По схеме внешней политики КЗ: Россия — приоритетный партнёр в освоении космического пространства; США — привлечение инвестиций; Турция — создание СП. Определите верное соответствие:',opts:['1-А, 2-В, 3-Б','1-В, 2-Б, 3-А','1-Б, 2-В, 3-А','1-Б, 2-А, 3-В'],ans:0},
+
+  // ── НОВЫЕ ВОПРОСЫ ──
+  {cat:'ancient',q:'Одними из первых древних источников о саках (конца VI в. до н.э.) были:',opts:['Римские','Персидские','Китайские','Греческие'],ans:1},
+  {cat:'soviet',q:'После Февральской революции 1917 года было сформировано правительство:',opts:['Временное','Учредительное','Советское','Переходное'],ans:0},
+  {cat:'khanate',q:'В IX–XIII вв. развитие торговли на Великом Шёлковом пути способствовало появлению монетных дворов в:',opts:['Сауране, Баласагуне','Ясы, Алмалыке','Янгикенте, Аксумбе','Отраре, Испиджабе'],ans:3},
+  {cat:'soviet',q:'В годы Гражданской войны «Красные горные орлы» Тарбагатая и Алтая были ярким примером:',opts:['Партизанского движения','Антисоветских формирований','Гуманитарной помощи','Военной экспансии'],ans:0},
+  {cat:'soviet',q:'Вытеснение царизмом султанского сословия из среднего и высшего звена управления краем в конце XIX века окончательно ликвидировало:',opts:['Остатки казахской государственности','Хозяйственный уклад шаруа','Родоплеменную структуру','Уклад кочевого скотоводства'],ans:0},
+  {cat:'khanate',q:'Объединяет ханов Касыма, Таукеля и Кенесары Касымова:',opts:['Создание регулярной боеспособной армии','Борьба за присырдарьинские города','Опора на биев в управлении ханством','Перенос столицы в Туркестан'],ans:0},
+  {cat:'soviet',q:'Первый ядерный полигон располагался на территории Казахстана — в песках:',opts:['Таукума','Нарына','Барсакелмес','Карынжарык'],ans:1},
+  {cat:'khanate',q:'Конечный результат внешней политики Есим-хана:',opts:['Завершил двухсотлетнюю борьбу за города на Сырдарье','Распространил влияние на земли Башкирии','Упрочнил позиции на берегах Жайыка и вытеснил ногайских мурз','Возвратил земли под властью сибирского хана Ибака'],ans:0},
+  {cat:'khanate',q:'Политический распад Казахского ханства в конце XVII века был преодолён принятием законов:',opts:['Есим хана','Тауке хана','Касым хана','Чингисхана'],ans:1},
+  {cat:'khanate',q:'Определите правителя, возглавлявшего могульское войско во время Батпактинской битвы в 1365 г.:',opts:['Ильяс Ходжа','Туглук-Тимур','Хызр-Ходжа','Пуладчи'],ans:0},
+
+  // ── ВОПРОСЫ 11-20: КАРТА РЕФОРМ 1867-1868 и ПОРТРЕТЫ ──
+  {cat:'soviet',q:'По карте реформы 1867–1868 гг.: определите количество генерал-губернаторств на территории Казахстана:',opts:['3','2','5','4'],ans:0},
+  {cat:'soviet',q:'По карте реформы 1867–1868 гг.: определите области, вошедшие в состав Западно-Сибирского генерал-губернаторства:',opts:['Уральская и Тургайская','Сырдарьинская и Семиреченская','Закавказская и Самаркандская','Семипалатинская и Акмолинская'],ans:3},
+  {cat:'soviet',q:'По карте реформы 1867–1868 гг.: определите правителя Российской империи, подписавшего указ о принятии реформ:',opts:['Николай II','Пётр I','Павел I','Александр II'],ans:3},
+  {cat:'soviet',q:'По карте реформы 1867–1868 гг.: определите районы восстания 1868–1869 гг.:',opts:['Закавказский и Самаркандский','Акмолинский и Семиреченский','Уральский и Тургайский','Сырдарьинский и Семипалатинский'],ans:2},
+  {cat:'soviet',q:'По карте реформы 1867–1868 гг.: определите цель проведения административных реформ:',opts:['Введение общеимперского управления','Соперничество с Китаем в строительстве городов','Установление торговых отношений с Хивой','Улучшение положения коренного населения'],ans:0},
+  {cat:'soviet',q:'Используя портрет №2 (центральный, с бородой): определите историческую личность:',opts:['М. Шокай','А. Бокейханов','М. Дулатов','М. Тынышпаев'],ans:1},
+  {cat:'soviet',q:'Портрет №1 (слева, с усами): окончил Верненскую гимназию с золотой медалью, избран депутатом во II Государственную думу:',opts:['Бахытжан Каратаев','Мустафа Шокай','Алихан Букейханов','Мухаметжан Тынышпаев'],ans:3},
+  {cat:'soviet',q:'Портрет №3 (справа): верный факт из общественно-политической деятельности:',opts:['Был издателем первого казахского журнала «Айкап»','Выпускал статьи под псевдонимами «Сын степей», «Киргиз-Кайсак»','Был инициатором выхода книг со стихами Абая и «Қырық мысал»','Издавал газету «Серке» как приложение к газете «Ульфат»'],ans:3},
+  {cat:'soviet',q:'Портрет №2 (центральный): верный факт из биографии:',opts:['Получил два диплома — учёного-лесовода и юриста','Получил звание «народного учителя»','Первый инженер-железнодорожник из числа казахов','Внёс вклад в развитие здравоохранения'],ans:0},
+  {cat:'soviet',q:'Соотнесите личность и деятельность: I. В 1909 г. вышел сборник «Оян, қазақ!»; II. Работал в статистической экспедиции Щербины; III. Окончил в 1906 г. СПб институт инженеров путей сообщения. А-портрет №1; Б-портрет №2; В-портрет №3:',opts:['I-В, II-А, III-Б','I-А, II-Б, III-В','I-В, II-Б, III-А','I-А, II-В, III-Б'],ans:2},
+
+  // ── НОВАЯ ПАРТИЯ ВОПРОСОВ ──
+  {cat:'ancient',q:'Представитель высшего сословия кара суйек:',opts:['Ходжа','Султан','Бий','Бай'],ans:2},
+  {cat:'ancient',q:'Завоеватель, разбивший в 331 г. до н.э. войско персидского царя Дария III в битве при Гавгамелах:',opts:['Модэ','Александр Македонский','Ишпакай','Атилла'],ans:1},
+  {cat:'soviet',q:'В годы массовых репрессий под Акмолинском был создан:',opts:['Женский исправительно-трудовой лагерь','Научно-исследовательский институт','Образцовое советское хозяйство','Колония для несовершеннолетних'],ans:0},
+  {cat:'khanate',q:'Борьба с сибирским ханом Кучумом стала одним из основных направлений внешней политики хана:',opts:['Есима','Тауекела','Тауке','Абулхаира'],ans:1},
+  {cat:'modern',q:'Документ, принятый Верховным Советом КазССР 25 октября 1990 года:',opts:['Указ о приостановлении деятельности КП РСФСР','Декларация о государственном суверенитете','Закон о государственной независимости РК','Закон «О языках»'],ans:1},
+  {cat:'khanate',q:'Абылай хан во внешней политике значительные усилия сосредоточил на:',opts:['Захвате Кыргызстана','Отдалении от России','Захвате Ирана','Ослаблении джунгар'],ans:3},
+  {cat:'soviet',q:'Лидером восстания 1916 года в Букеевской Орде являлся:',opts:['С. Мендешев','Т. Бокин','А. Жангелдин','Б. Ашекеев'],ans:0},
+  {cat:'khanate',q:'Период с 630 по 704 г. был временем затяжного кризиса в каганате:',opts:['Восточно-Тюркском','Карлукском','Западно-Тюркском','Тюргешском'],ans:2},
+  {cat:'khanate',q:'Окончательно Ногайская Орда обособилась к середине XV в. при:',opts:['Едыге','Мухаммаде','Нур-ад-Дине','Пуладчи'],ans:2},
+  {cat:'soviet',q:'Исатай Тайманов убеждал царскую администрацию в возможности мирного разрешения конфликта для того, чтобы:',opts:['Выиграть время и уйти в Зауральские степи','Избежать наказания за организацию восстания','Объединиться с ханом Арынгазы','Возвыситься над другими чингизидами'],ans:0},
+
+  // ── РЕФОРМА 1822 ГОДА (схема) ──
+  {cat:'soviet',q:'Схема «Административное деление Среднего жуза по реформе 1822 г.»: назовите автора реформы:',opts:['П. Эссен','Н. Коншин','М. Сперанский','А. Гейнс'],ans:2},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: количество административно-территориальных единиц в системе управления:',opts:['Семь','Четыре','Пять','Три'],ans:3},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: руководители единиц, осуществляющих хозяйственные и полицейские функции:',opts:['Старшина и атабеки','Волостные управители и аульные старшины','Генерал-губернатор и волостные управители','Старший султан и везири'],ans:1},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: верный порядок выборов во внешних округах:',opts:['Заседатели от почётных казахов избирались султанами','Султаны избирались на пять лет','Старший султан избирался биями','Аульные старшины выбирались кочевниками'],ans:2},
+  {cat:'soviet',q:'По схеме реформы 1822 г.: основная цель реформ:',opts:['Деление края на три генерал-губернаторства','Окончательное отстранение от власти султанов','Подготовка почвы для массового переселения крестьян','Ликвидация ханской власти'],ans:3},
+
+  // ── ГОСУДАРСТВО ОГУЗОВ (по тексту) ──
+  {cat:'khanate',q:'Текст об огузах: «В 965 г. в союзе с Киевской Русью они разгромили Хазарский каганат...». Определите союзника огузов при разгроме хазар:',opts:['Государство Хорезм','Иран','Киевская Русь','Китай'],ans:2},
+  {cat:'khanate',q:'Текст об огузах: определите главнокомандующего войсками огузских племён:',opts:['Кюль-еркины','Атабеки','Шад-тутук','Сюбаши'],ans:3},
+  {cat:'khanate',q:'Текст об огузах: определите причину борьбы огузов с Хазарским каганатом:',opts:['Захват богатых земель Хорезма','Захват богатых земель Восточного Жетысу','Захват территории Мавераннахра','Захват богатых пастбищных земель Причерноморья'],ans:3},
+  {cat:'khanate',q:'Текст об огузах: «В X в. территория от Сырдарьи до Кавказа называлась «Огузской степью»...». Определите результат внешней политики огузов в X в.:',opts:['На западе достигли земель Кавказа','На востоке достигли Алтая','Захватили Восточный Дешт-и-Кыпчак','Продвинулись до Дуная'],ans:0},
+  {cat:'khanate',q:'Текст об огузах: «В конце X – начале XI в. в государстве огузов действовала система налоговых сборов...». Определите одну из причин ослабления государства огузов:',opts:['Восстания племён против высоких налогов','Захват территории Волжскими Булгарами','Приход карлуков в Семиречье','Длительная борьба с печенегами'],ans:0},
+
+  // ── НОВАЯ ПАРТИЯ ──
+  {cat:'khanate',q:'Союзник огузов в борьбе с Хазарским каганатом:',opts:['Кимакский каганат','Государство Караханидов','Волжская Булгария','Киевская Русь'],ans:3},
+  {cat:'soviet',q:'Российский исследователь Л. Мейер писал: «...он имел великий дар привязывать к себе людей... и даже несколько русских беглых...», имея в виду:',opts:['Кенесары Касымова','Махамбета Утемисова','Жоламана Тленшиева','Есета Котибарова'],ans:0},
+  {cat:'soviet',q:'Жанкожу батыра и хана Арынгазы объединяет:',opts:['Борьба с деспотизмом Хивы','Противостояние с родовыми старшинами','Мирное принятие Уставов 20-х годов XIX в.','Пленение российскими войсками'],ans:0},
+  {cat:'soviet',q:'Процесс создания и развития тяжёлой промышленности получил название:',opts:['Новая экономическая политика','Индустриализация','Коллективизация','Ускорение экономики'],ans:1},
+  {cat:'soviet',q:'В установлении Советской власти участвовала партия:',opts:['«Үш жүз»','«Жарлы»','«Талап»','«Кошчи»'],ans:0},
+  {cat:'soviet',q:'Ядерный полигон в Казахстане охватывал районы областей:',opts:['Уральска и Тургая','Акмолинска и Жетису','Семипалатинска и Павлодара','Уральска и Сырдарьи'],ans:2},
+  {cat:'khanate',q:'Замена улусной системы жузовой системой связана с именем хана:',opts:['Керея','Абулхаира','Тауке','Хакназара'],ans:2},
+  {cat:'khanate',q:'В Казахском ханстве роль парламентариев и ходатаев при заключении мирных соглашений выполняли:',opts:['Кожа','Батыры','Аксакалы','Акыны'],ans:0},
+  {cat:'ancient',q:'Достоверные сведения о внешней политике саков и ахеменидов (конец V–IV вв. до н.э.):',opts:['Царь саков был подданным ахеменидского властителя','Между ними не было дипломатических отношений','Царь саков был союзником ахеменидского властителя','Сакские земли входили в одну из ахеменидских сатрапий'],ans:3},
+  {cat:'ancient',q:'Владыка Верхнего мира по религиозным представлениям тюрков:',opts:['Земля-Вода (Жер–Су)','Тенгри','Умай','Эрклиг'],ans:1},
+
+  // ── ВНЕШНЯЯ ПОЛИТИКА КЗ (по схеме) ──
+  {cat:'modern',q:'Схема «Приоритеты внешней политики Казахстана»: определите государство, первым признавшее независимость РК:',opts:['США','Уругвай','Россия','Турция'],ans:3},
+  {cat:'modern',q:'Схема «Приоритеты внешней политики КЗ»: определите государство — приоритетного партнёра в освоении космического пространства:',opts:['Россия','США','Узбекистан','Китай'],ans:0},
+  {cat:'modern',q:'Схема «Приоритеты внешней политики КЗ»: определите центральноазиатские страны, вошедшие в состав СНГ:',opts:['Казахстан, Кыргызстан, Украина','Казахстан, Узбекистан, Кыргызстан','Китай, Россия, Туркмения','Россия, Узбекистан, Таджикистан'],ans:1},
+  {cat:'modern',q:'Схема «Приоритеты внешней политики КЗ»: определите международную организацию, саммит которой состоялся в 2010 году в Астане:',opts:['ОБСЕ','ЮНЕСКО','ОДКБ','ООН'],ans:0},
+  {cat:'modern',q:'Схема «Приоритеты внешней политики КЗ»: соотнесите страны и направления: 1.Россия 2.США 3.Турция / А.Освоение космоса Б.Создание СП В.Инвестиции в экономику:',opts:['1-Б, 2-А, 3-В','1-А, 2-В, 3-Б','1-Б, 2-В, 3-А','1-В, 2-Б, 3-А'],ans:1},
+
+  // ── ЗОЛОТОЙ ЧЕЛОВЕК (по тексту) ──
+  {cat:'ancient',q:'Текст «Золотой человек»: определите курган, в котором был погребён сакский юноша:',opts:['Иссык','Берель','Бесшатыр','Шиликты'],ans:0},
+  {cat:'ancient',q:'Текст «Золотой человек»: «...был одет в сшитую из алой замши одежду...». Определите ткань одежды знатного юноши:',opts:['Замша','Хлопок','Шёлк','Войлок'],ans:0},
+  {cat:'ancient',q:'Текст «Золотой человек»: «...бляхами с изображением тигриной головы...». Определите ювелирный стиль в одежде юноши:',opts:['Звериный','Антропоморфный','Полихромный','Зооморфный'],ans:0},
+  {cat:'ancient',q:'Текст «Золотой человек»: «На нём были узкие кожаные штаны, высокие сапоги и камзол с зауженными рукавами. Сапоги и камзол обшиты бляхами в виде трилистника, ворот и рукава – бляхами с изображением тигриной головы». Определите верное утверждение: I.Высокие сапоги и камзол с зауженными рукавами; II.Бляхи в виде тигриной головы на сапогах и камзоле; III.Камзол с широкими рукавами; IV.Широкие кожаные штаны:',opts:['III','IV','II','I'],ans:3},
+  {cat:'ancient',q:'Текст «Золотой человек»: «Знатный сакский юноша, погребённый в кургане...». В тексте речь идёт о юноше из племени:',opts:['Хаомоварга','Парадарайя','Массагеты','Тиграхауда'],ans:3},
+
+  // ── НОВАЯ ПАРТИЯ ──
+  {cat:'ancient',q:'Союзником китайцев в борьбе с гуннами в начале II в. до н.э. были:',opts:['Уйсуни','Сарматы','Аргиппеи','Аримаспы'],ans:0},
+  {cat:'khanate',q:'Первое лицо, военачальник и собственник всех земель в Западно-Тюркском каганате:',opts:['Джабгу','Каган','Ябгу','Эльтебер'],ans:1},
+  {cat:'khanate',q:'Старший бий Младшего жуза, батыр, советник Тауке хана:',opts:['Айтеке би','Едиге би','Казыбек би','Толе би'],ans:0},
+  {cat:'soviet',q:'Гражданская война в Казахстане началась с:',opts:['Указа царя от 25 июня 1916 г.','Первого всеказахского съезда','Мятежа Чехословацкого корпуса','Вооружённого восстания в Петрограде'],ans:2},
+  {cat:'soviet',q:'Благодаря освоению целинных и залежных земель Казахстан вышел на мировой рынок в качестве экспортёра:',opts:['Нефти','Мяса','Зерна','Газа'],ans:2},
+  {cat:'soviet',q:'Активный сторонник прогрессивных реформ, автор статьи «Записки о судебной реформе»:',opts:['Ш. Уалиханов','И. Алтынсарин','А. Кунанбаев','Ш. Кудайбердиев'],ans:0},
+  {cat:'soviet',q:'В связи с введением единого налога по реформам 60-х гг. XIX в., кибиточная подать:',opts:['Была одинаковой для всех территорий империи','Не взималась с коренного населения','Различалась в зависимости от территорий','Взималась раз в три года'],ans:2},
+  {cat:'khanate',q:'В 1594 году Тауекель направил в Москву посольство с целью:',opts:['Распространить власть на башкир и ногаев','Наладить отношения с могулами','Освободить из плена султана Ораз-Мухаммеда','Передать русскому царю огнестрельное оружие'],ans:2},
+  {cat:'soviet',q:'В период ликвидации ханской власти в Казахстане:',opts:['Установлены постоянные льготы для казахов-скотоводов','Ограничен сбыт продукции кочевых хозяйств','Произошёл массовый переход казахов к земледелию','Не произошёл массовый переход скотоводов к земледелию'],ans:3},
+  {cat:'soviet',q:'Определите последствия насильственной коллективизации сельского хозяйства в Казахстане:',opts:['Перевод на хозрасчёт, сдельная оплата труда','От голода погибло больше половины казахского народа','Введены товарно-денежные отношения, рынок и торговля','Развитие сельского хозяйства, уничтожение частных хозяйств'],ans:1},
+
+  // ── КАЗАХСКОЕ ХАНСТВО (по тексту) ──
+  {cat:'khanate',q:'Текст «Казахское ханство»: определите причину образования Казахского ханства:',opts:['Откочёвка потомков Есен-Буги','Ослабление ойратов','Ослабление Могулистана','Усиление власти Абулхаира'],ans:2},
+  {cat:'khanate',q:'Текст «Казахское ханство»: «В долинах Шу и Талас было провозглашено Казахское ханство...». Определите ставку в 1465 году:',opts:['Туркестан','Отрар','Сыгнак','Козыбасы'],ans:3},
+  {cat:'khanate',q:'Текст «Казахское ханство»: «Ход образования Казахского ханства связан с внутриполитическим состоянием государств...». Определите эти два государства:',opts:['Ханства Абулхаира и Могулистана','Золотой Орды и Могулистана','Ак Орды и Могулистана','Ханства Абулхаира и Ногайской Орды'],ans:0},
+  {cat:'khanate',q:'Текст «Казахское ханство»: год образования Казахского ханства:',opts:['1362 г.','1460 г.','1364 г.','1465 г.'],ans:3},
+  {cat:'khanate',q:'Текст «Казахское ханство»: определите верные аргументы: I.Об образовании КХ писал М.Х. Дулати; II.Жанибек был старшим ханом; III.Абулхайр захватил Могулистан; IV.Керей и Жанибек отражали набеги ойратов:',opts:['I, IV','I, II','I, III','II, IV'],ans:0},
+
+  // ── КАРТА «КАЗАХСТАН В НАЧАЛЕ XX ВЕКА» ──
+  {cat:'soviet',q:'По карте «Казахстан в начале XX в.»: определите депутата II Государственной Думы от Семиреченской области:',opts:['М. Тынышбаев','Т. Нурекенов','А. Байтурсынов','Ш. Косшыгулов'],ans:0},
+  {cat:'soviet',q:'По карте «Казахстан в начале XX в.»: определите исторический период:',opts:['Первая половина XX века','Конец XIX века','Вторая половина XIX века','Начало XIX века'],ans:0},
+  {cat:'soviet',q:'По карте «Казахстан в начале XX в.»: определите депутатов-казахов I и II Государственной Думы:',opts:['А. Байтурсынов и М. Шокай','А. Беремжанов и Ш. Косшыгулов','Б. Каратаев и А. Букейханов','М. Дулатов и Ш. Косшыгулов'],ans:2},
+  {cat:'soviet',q:'По карте «Казахстан в начале XX в.»: определите редактора журнала «Айкап»:',opts:['М. Дулатов','М. Сералин','А. Букейханов','С. Сейфуллин'],ans:1},
+  {cat:'soviet',q:'По карте «Казахстан в начале XX в.»: определите верное утверждение:',opts:['Нац. интеллигенция считала необходимым прекратить переселение крестьян','Депутаты считали нужным примкнуть к марксистским кружкам','Русская интеллигенция считала нельзя проводить акции протеста','Царское правительство вело просветительскую работу среди русского населения'],ans:0},
+
+  // ── НОВАЯ ПАРТИЯ 30 ВОПРОСОВ ──
+  {cat:'soviet',q:'Руководитель восстания 1916 года в Семиречье:',opts:['Амангельды Иманов','Абдулгафар Жанбосынов','Токаш Бокин','Алиби Джангильдин'],ans:2},
+  {cat:'soviet',q:'В 20-е годы XIX в. борьбу казахского народа за свои права возглавил внук Аблай хана:',opts:['Нуралы','Уали','Саржан','Кенесары'],ans:2},
+  {cat:'khanate',q:'Основную массу населения Золотой Орды составляли:',opts:['Булгары','Кыпчаки','Карлуки','Найманы'],ans:1},
+  {cat:'soviet',q:'Автор стихотворения «Ленинградцы, дети мои!», написанного в 1941 г.:',opts:['Г. Мусрепов','Ж. Саин','С. Муканов','Ж. Жабаев'],ans:3},
+  {cat:'soviet',q:'Процесс присоединения территории Казахстана к России был завершён в:',opts:['30-е годы XVI в.','70-е годы XVIII в.','60-е годы XIX в.','60-е годы XVIII в.'],ans:2},
+  {cat:'ancient',q:'Крупнейшим скоплением наскальных рисунков эпохи андроновцев является урочище:',opts:['Арыстанды','Батпак','Тамгалы','Токалы'],ans:2},
+  {cat:'soviet',q:'Поэму «Козы Корпеш и Баян сулу» Пушкин А.С. записал в городе:',opts:['Оренбурге','Уральске','Тургае','Семипалатинске'],ans:1},
+  {cat:'ancient',q:'Саки-хаомаварга проживали:',opts:['В Семиречье','В Приуралье','В долине Мургаба','У подножия Тянь-Шаня'],ans:2},
+  {cat:'khanate',q:'При рождении основателю монгольской империи Чингис хану было дано имя:',opts:['Тулуй','Шагатай','Жебе','Темучин'],ans:3},
+  {cat:'khanate',q:'Золотая Орда при Узбек-хане и его преемнике Джаныбеке:',opts:['Распалась на отдельные улусы','Стала чеканить собственную монету','Стала независимым государством','Достигла наибольшего могущества'],ans:3},
+  {cat:'soviet',q:'В первой половине XIX в. из народных композиторов-песенников выделялся своим творчеством:',opts:['Сегиз серы','Узак','Есжан','Байжума'],ans:0},
+  {cat:'soviet',q:'Судебная система Казахстана по «Уставу» 1822 года:',opts:['Усилила социальное расслоение','Укрепила правопорядок','Привела к увеличению налогов','Приведена в соответствие с судебной системой России'],ans:3},
+  {cat:'khanate',q:'Город в Южном Казахстане, который оказывал сопротивление монголам в течение 5 месяцев:',opts:['Отрар','Сыгнак','Ашнас','Дженд'],ans:0},
+  {cat:'ancient',q:'Люди мустьерского времени были современниками:',opts:['Синантропа','Питекантропа','Неандертальца','Кроманьонца'],ans:2},
+  {cat:'soviet',q:'Стихотворение Т. Шевченко, которое сравнивает жизнь казаха и украинца:',opts:['«Мои думы»','«Казахская семья»','«Казах на лошади»','«Байгуши»'],ans:0},
+  {cat:'modern',q:'Одним из первых и наиболее массовых в Казахстане в конце 80-х годов было движение:',opts:['«Зелёных»','«Союз независимых студентов»','«Невада–Семей»','«Единство»'],ans:2},
+  {cat:'khanate',q:'На территории какого улуса возникло ханство Ак-Орда?',opts:['Улуса Субедэя','Улуса Малибета','Улуса Жебе','Улуса Жошы'],ans:3},
+  {cat:'ancient',q:'Ставка Кангюев называлась:',opts:['Суяб','Чегучен','Битянь','Чирик-Рабат'],ans:2},
+  {cat:'soviet',q:'Казахский учёный — друг Ф. Достоевского:',opts:['Ш. Уалиханов','Ы. Алтынсарин','А. Байтурсынов','Абай'],ans:0},
+  {cat:'ancient',q:'В сакском обществе пленных использовали:',opts:['В армии','В домашнем хозяйстве','В строительстве','Для обмена'],ans:1},
+  {cat:'ancient',q:'Первые останки «человека разумного» были обнаружены:',opts:['В Египте','В Германии','Во Франции','В Кении'],ans:2},
+  {cat:'khanate',q:'Общий подъём городской культуры на территории средневекового Казахстана наблюдается в:',opts:['VI–XII вв.','VIII–IX вв.','VI–VIII вв.','IX–XIII вв.'],ans:3},
+  {cat:'soviet',q:'Решение ввести советские войска в Афганистан было принято в:',opts:['1980 году','1981 году','1977 году','1979 году'],ans:3},
+  {cat:'khanate',q:'Столица первых казахских правителей:',opts:['Сауран','Отрар','Яссы','Сыгнак'],ans:3},
+  {cat:'khanate',q:'Мавзолей Ходжа Ахмета Яссави находится в:',opts:['Туркестане','Ташкенте','Сыгнаке','Отраре'],ans:0},
+  {cat:'khanate',q:'Одна из ставок кыпчаков находилась в:',opts:['Баласагуне','Суябе','Отраре','Сыгнаке'],ans:3},
+  {cat:'soviet',q:'В какие годы Динмухамед Кунаев возглавлял Казахстан?',opts:['Октябрь 1964 — ноябрь 1984','Январь 1960 — сентябрь 1987','Март 1965 — ноябрь 1986','Январь 1960 — декабрь 1986'],ans:3},
+  {cat:'soviet',q:'На месте казахского поселения Алматы в 1854 г. заложили укрепление:',opts:['Уральск','Железинск','Семипалатинск','Верное'],ans:3},
+  {cat:'khanate',q:'Особое разрешение на право княжения, которое монгольские ханы выдавали удельным русским князьям:',opts:['Яса','Ярлык','Диван','Тамга'],ans:1},
+  {cat:'ancient',q:'Длительные перекочёвки с летних на зимние пастбища характерны:',opts:['Оседлому скотоводству','Полукочевому скотоводству','Яйлажному скотоводству','Кочевому скотоводству'],ans:3},
+
+  // ── НОВАЯ ПАРТИЯ 30 ВОПРОСОВ ──
+  {cat:'khanate',q:'Из выходцев какой династии назначался верховный правитель Западно-Тюркского каганата — каган?',opts:['Нушиби','Огузов','Ягма','Кыпчаков'],ans:0},
+  {cat:'khanate',q:'Кто в Западно-Тюркском каганате выполнял судебные функции?',opts:['Ябгу','Джабгу','Эльтебер','Буюруки'],ans:3},
+  {cat:'khanate',q:'Кто был первым лицом Западно-Тюркского каганата?',opts:['Эльтебер','Хан','Ябгу','Каган'],ans:3},
+  {cat:'khanate',q:'Как назывался наместник Западно-Тюркского каганата, контролирующий сбор податей?',opts:['Эльтебер','Джабгу','Хан','Тудун'],ans:3},
+  {cat:'khanate',q:'Главный предводитель огузского войска носил титул:',opts:['Ябгу','Джабгу','Буюрук','Сюбаши'],ans:3},
+  {cat:'khanate',q:'В чьих руках была высшая судебная власть в Западно-Тюркском каганате?',opts:['Ябгу','Тархан','Эльтебер','Хан'],ans:1},
+  {cat:'ancient',q:'Наиболее ранние каменные орудия были обнаружены в:',opts:['Западном Казахстане','Южном Казахстане','Северном Казахстане','Восточном Казахстане'],ans:1},
+  {cat:'khanate',q:'Неудачи Хакназара в войнах с моголами и ойратами привели к потере:',opts:['Присырдарьинских городов','Приаралья','Южного Прииртышья','Жетысу'],ans:3},
+  {cat:'soviet',q:'В театр военных действий Сталинградского фронта в 1942 г. были широко втянуты ресурсы:',opts:['Центрального Казахстана','Западно-Казахстанской области','Северного Казахстана','Южного Казахстана'],ans:1},
+  {cat:'soviet',q:'В 20–40-е годы XIX в. к России ещё не была присоединена территория:',opts:['Западного Казахстана','Северного Казахстана','Центрального Казахстана','Южного Казахстана'],ans:3},
+  {cat:'khanate',q:'Территория, на которой в середине XIV – нач. XVI вв. находилось государство Могулистан:',opts:['Мавераннахр','Юго-Восточный Казахстан','Центральный Казахстан','Восточный Дешт-и-Кыпчак'],ans:1},
+  {cat:'modern',q:'Указ о закрытии Семипалатинского испытательного ядерного полигона подписал:',opts:['Д.А. Кунаев','Г.В. Колбин','Н.А. Назарбаев','М.С. Горбачёв'],ans:2},
+  {cat:'khanate',q:'«Кодекс куманикус» предназначался для:',opts:['Посланий ханов римским папам','Распространения христианства среди кочевников','Распространения указов ханов среди Европы','Европейцев в Золотой Орде'],ans:3},
+  {cat:'ancient',q:'Историческое прошлое человечества по вещественным источникам изучает наука:',opts:['Археология','Этнография','Геофизика','Палеонтология'],ans:0},
+  {cat:'soviet',q:'«Устав о сибирских киргизах» 1822 г. был разработан под руководством Сибирского генерал-губернатора:',opts:['Эссена','Сперанского','Игельстрома','Батенькова'],ans:1},
+  {cat:'soviet',q:'Алихан Букейханов возглавлял партию:',opts:['Алаш','РСДРП','Эсеров','Уш жуз'],ans:0},
+  {cat:'soviet',q:'Б. Ашекеев в 1916 г. в ходе восстания был избран ханом:',opts:['Тургайского уезда','Иргизского уезда','Аельдинской волости','Верненского уезда'],ans:3},
+  {cat:'ancient',q:'Какая из перечисленных эпох не входит в периодизацию истории человечества?',opts:['Эпоха освоения степных пространств','Эпоха бронзы','Эпоха камня','Эпоха железа'],ans:0},
+  {cat:'soviet',q:'Среди рабочих казахской национальности в начале XX в. было значительное число:',opts:['Железнодорожников','Ткачей','Машиностроителей','Автомобилистов'],ans:0},
+  {cat:'ancient',q:'Человек изобрёл рыболовную снасть и лодку в эпоху:',opts:['Неолита','Среднего палеолита','Мезолита','Позднего палеолита'],ans:2},
+  {cat:'ancient',q:'Матриархальная родовая община сформировалась в период:',opts:['Среднего палеолита','Верхнего палеолита','Мезолита','Раннего палеолита'],ans:1},
+  {cat:'ancient',q:'С кем были схожи племена уйсунов антропологически?',opts:['Гунны','Саки','Андроновцы','Монголы'],ans:2},
+  {cat:'khanate',q:'К высшему аристократическому сословию в казахском обществе относились:',opts:['Бии','Улусбеки','Баи','Султаны'],ans:3},
+  {cat:'khanate',q:'Фактическим правителем государства Могулистан являлся глава племени дулат:',opts:['Ногай','Хызыр','Едыге','Эмир Пуладчи'],ans:3},
+  {cat:'khanate',q:'Как назывался правитель у карлуков до 840 г.?',opts:['Эльтебер','Хан','Джабгу','Каган'],ans:2},
+  {cat:'soviet',q:'Как назывался главнокомандующий повстанцами Тургайской области в 1916 г.?',opts:['Элбеги','Мерген','Сардарбек','Жасакшы'],ans:2},
+  {cat:'khanate',q:'Государства Ак Орда и Могулистан ослабли в результате:',opts:['Набегов джунгар','Набегов золотоордынских ханов','Междоусобных войн','Набегов эмира Тимура'],ans:3},
+  {cat:'modern',q:'В послании Президента «Казахстан – 2030» первым стратегическим приоритетом является:',opts:['Профессиональное государство','Национальная безопасность','Внутриполитическая стабильность','Здоровье, образование'],ans:1},
+  {cat:'soviet',q:'В 1930–1932 гг. в стране разразился:',opts:['Политический кризис','Голод','Противостояние на религиозной почве','Экономический кризис'],ans:1},
+  {cat:'soviet',q:'К.И. Сатпаев был удостоен Государственной премии в 1942 г. за исследование:',opts:['Джезказганского медного месторождения','Карагандинского угольного бассейна','Мунайлы','Экибастузского угольного бассейна'],ans:0},
+];
+
+</script>
+</body>
+</html>
