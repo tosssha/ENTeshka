@@ -1068,7 +1068,7 @@ async function fbGet(p){try{const r=await fetch(FB+p+'.json');return await r.jso
 async function fbSet(p,d){try{await fetch(FB+p+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});}catch(e){}}
 async function fbPatch(p,d){try{await fetch(FB+p+'.json',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});}catch(e){}}
 
-const ADMIN={login:'admin',pass:'enteshka2025'};
+const ADMIN={login:'admin'};
 const PLANS={1:'1 месяц — 1 190 ₸',2:'3 месяца — 2 990 ₸',3:'6 месяцев — 5 590 ₸'};
 let CUR=null,CUR_PLAN=2,ansVisible=false,bankFilter='all',bankShown=20;
 let qqs=[],qIdx=0,qSc=0,qTmr=null,qSec=1440,qStart=0;
@@ -1153,7 +1153,12 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   const pass=document.getElementById('lPass').value;
   document.getElementById('lErr').style.display='none';
   if(!login||!pass)return showErr('lErr','⚠️ Заполните все поля');
-  if(login===ADMIN.login&&pass===ADMIN.pass){localStorage.setItem('ENT_ADMIN','1');closeModal();showAdmin();return;}
+  if(login===ADMIN.login){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pass));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash==='4d73d50c6c43b331d1ccce802bdfa7c816b2772b3400949a4675ebcc54705300'){localStorage.setItem('ENT_ADMIN','1');closeModal();showAdmin();return;}
+    else return showErr('lErr','⚠️ Неверный пароль');
+  }
   const logBtn=document.getElementById('logBtn');
   logBtn.textContent='Входим...';logBtn.disabled=true;
   const userData=await fbGet('/users/'+login);
