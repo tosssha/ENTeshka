@@ -1039,7 +1039,21 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
       <div id="aMsg" class="admin-msg"></div>
     </div>
     <div class="admin-card">
+      <div class="admin-stats-grid">
+        <div class="ast"><div class="ast-n" id="aStat1">—</div><div class="ast-l">Всего юзеров</div></div>
+        <div class="ast"><div class="ast-n" id="aStat2">—</div><div class="ast-l">С подпиской</div></div>
+        <div class="ast"><div class="ast-n" id="aStat3">—</div><div class="ast-l">Всего тестов</div></div>
+        <div class="ast"><div class="ast-n" id="aStat4">—</div><div class="ast-l">Средний балл</div></div>
+      </div>
       <div class="admin-ct">👥 Все пользователи</div>
+      <input class="admin-search" id="adminSearch" type="text" placeholder="Поиск по логину или имени..." oninput="filterUsers()">
+      <div class="sort-btns">
+        <button class="sort-btn active" onclick="sortUsers('reg',this)">По регистрации</button>
+        <button class="sort-btn" onclick="sortUsers('tests',this)">По тестам</button>
+        <button class="sort-btn" onclick="sortUsers('score',this)">По баллу</button>
+        <button class="sort-btn" onclick="sortUsers('time',this)">По времени</button>
+        <button class="sort-btn" onclick="sortUsers('sub',this)">Подписка ↑</button>
+      </div>
       <div id="userList"><div style="color:var(--muted);text-align:center;padding:16px;font-size:0.8rem;">Пользователей пока нет</div></div>
     </div>
   </div>
