@@ -482,6 +482,21 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 .sm-btn{padding:5px 10px;border-radius:7px;font-size:0.65rem;cursor:pointer;background:transparent;flex-shrink:0;font-family:'Inter',sans-serif;}
 .sm-btn-red{border:1px solid rgba(231,76,60,0.3);color:var(--red);}
 .sm-btn-gold{border:1px solid rgba(200,168,75,0.3);color:var(--gold);}
+.admin-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.ast{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+.ast-n{font-family:'Unbounded',sans-serif;font-size:1.3rem;font-weight:700;color:var(--gold);}
+.ast-l{font-size:0.65rem;color:var(--muted);margin-top:3px;}
+.ur-stats{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
+.ur-stat{font-size:0.63rem;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,0.05);color:var(--muted);}
+.ur-stat.good{background:rgba(46,204,113,0.08);color:var(--green);}
+.ur-stat.gold{background:rgba(200,168,75,0.08);color:var(--gold);}
+.ur-stat.sky{background:rgba(0,168,224,0.08);color:var(--sky);}
+.admin-search{width:100%;padding:9px 13px;border-radius:8px;background:#0D0F14;border:1px solid rgba(255,255,255,0.08);color:var(--text);font-family:'Inter',sans-serif;font-size:0.84rem;outline:none;margin-bottom:12px;}
+.admin-search:focus{border-color:var(--gold);}
+.sort-btns{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.sort-btn{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--muted);font-size:0.7rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.sort-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(200,168,75,0.07);}
+@media(max-width:768px){.admin-stats-grid{grid-template-columns:repeat(2,1fr);}}
 
 .hidden{display:none!important;}
 
@@ -1292,6 +1307,25 @@ function finishQuiz(){
 }
 
 function saveTestResult(score, elapsedSec, timeStr){
+  // Also save to Firebase for admin stats
+  if(CUR && CUR.login){
+    fbGet('/stats/'+CUR.login).then(existing=>{
+      const s = existing || {totalTests:0,totalScore:0,totalTime:0,bestScore:0};
+      const newTotal = (s.totalTests||0)+1;
+      const newScore = (s.totalScore||0)+score;
+      const newTime = (s.totalTime||0)+elapsedSec;
+      const newBest = Math.max(s.bestScore||0, score);
+      const avg = Math.round(newScore/newTotal*10)/10;
+      fbSet('/stats/'+CUR.login, {
+        totalTests: newTotal,
+        totalScore: newScore,
+        totalTime: newTime,
+        bestScore: newBest,
+        avgScore: avg,
+        lastTest: new Date().toLocaleDateString('ru-RU')
+      });
+    });
+  }
   const stats=getStats();
   const today=new Date().toLocaleDateString('ru-RU');
   
@@ -1489,21 +1523,85 @@ async function revokeAccess(login){
   const userData=await fbGet('/users/'+login);if(!userData)return;
   await fbPatch('/users/'+login,{paid:false,paidUntil:''});renderUsers();
 }
+let allUsersData = [];
+let currentSort = 'reg';
+
 async function renderUsers(){
   const list=document.getElementById('userList');
   list.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:0.8rem;">Загружаем...</div>';
   const users=await fbGet('/users');
   if(!users||!Object.keys(users).length){list.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:0.8rem;">Пользователей пока нет</div>';return;}
-  list.innerHTML=Object.values(users).map(u=>`
-    <div class="user-row">
+  
+  // Fetch stats for each user
+  const userList = Object.values(users);
+  const userStatsPromises = userList.map(u => fbGet('/stats/'+u.login));
+  const statsArr = await Promise.all(userStatsPromises);
+  
+  allUsersData = userList.map((u,i) => ({...u, _stats: statsArr[i]||{}}));
+  
+  // Global stats
+  const totalTests = allUsersData.reduce((a,u)=>a+(u._stats.totalTests||0),0);
+  const paidCount = allUsersData.filter(u=>u.paid).length;
+  const avgScores = allUsersData.filter(u=>u._stats.avgScore).map(u=>u._stats.avgScore);
+  const globalAvg = avgScores.length ? Math.round(avgScores.reduce((a,b)=>a+b,0)/avgScores.length*10)/10 : '—';
+  
+  document.getElementById('aStat1').textContent = allUsersData.length;
+  document.getElementById('aStat2').textContent = paidCount;
+  document.getElementById('aStat3').textContent = totalTests;
+  document.getElementById('aStat4').textContent = globalAvg !== '—' ? globalAvg+'/20' : '—';
+  
+  renderUserList();
+}
+
+function renderUserList(){
+  const list=document.getElementById('userList');
+  const search=(document.getElementById('adminSearch')||{value:''}).value.toLowerCase();
+  
+  let filtered = allUsersData.filter(u=>
+    !search || u.login.includes(search) || (u.name+' '+u.sur).toLowerCase().includes(search)
+  );
+  
+  // Sort
+  if(currentSort==='tests') filtered.sort((a,b)=>(b._stats.totalTests||0)-(a._stats.totalTests||0));
+  else if(currentSort==='score') filtered.sort((a,b)=>(b._stats.avgScore||0)-(a._stats.avgScore||0));
+  else if(currentSort==='time') filtered.sort((a,b)=>(b._stats.totalTime||0)-(a._stats.totalTime||0));
+  else if(currentSort==='sub') filtered = filtered.filter(u=>u.paid).concat(filtered.filter(u=>!u.paid));
+  
+  if(!filtered.length){list.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:0.8rem;">Никого не найдено</div>';return;}
+  
+  list.innerHTML=filtered.map(u=>{
+    const s=u._stats||{};
+    const tests=s.totalTests||0;
+    const avg=s.avgScore?s.avgScore.toFixed(1)+'/20':'—';
+    const best=s.bestScore?s.bestScore+'/20':'—';
+    const mins=s.totalTime?Math.round(s.totalTime/60)+'мин':'—';
+    const last=s.lastTest||'—';
+    return `<div class="user-row">
       <div class="ur-av">${(u.name[0]||'?')+(u.sur[0]||'?')}</div>
       <div class="ur-info">
         <div class="ur-name">${u.name} ${u.sur}</div>
         <div class="ur-login">@${u.login}${u.paidUntil?' · до '+u.paidUntil:''}${u.createdAt?' · рег. '+u.createdAt:''}</div>
+        <div class="ur-stats">
+          <div class="ur-stat gold">📝 ${tests} тестов</div>
+          <div class="ur-stat good">⭐ avg ${avg}</div>
+          <div class="ur-stat gold">🏆 best ${best}</div>
+          <div class="ur-stat sky">⏱ ${mins}</div>
+          ${last!=='—'?`<div class="ur-stat">📅 ${last}</div>`:''}
+        </div>
       </div>
       <div class="ur-badge ${u.paid?'badge-on':'badge-off'}">${u.paid?'✓ Активна':'Нет'}</div>
       ${u.paid?`<button class="sm-btn sm-btn-red" onclick="revokeAccess('${u.login}')">Отозвать</button>`:`<button class="sm-btn sm-btn-gold" onclick="document.getElementById('aLogin').value='${u.login}'">Выдать</button>`}
-    </div>`).join('');
+    </div>`;
+  }).join('');
+}
+
+function filterUsers(){renderUserList();}
+
+function sortUsers(type, btn){
+  currentSort=type;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderUserList();
 }
 
 // ════════════════════════
