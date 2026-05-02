@@ -1153,7 +1153,7 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   const pass=document.getElementById('lPass').value;
   document.getElementById('lErr').style.display='none';
   if(!login||!pass)return showErr('lErr','⚠️ Заполните все поля');
-  if(login===ADMIN.login&&pass===ADMIN.pass){closeModal();showAdmin();return;}
+  if(login===ADMIN.login&&pass===ADMIN.pass){localStorage.setItem('ENT_ADMIN','1');closeModal();showAdmin();return;}
   const logBtn=document.getElementById('logBtn');
   logBtn.textContent='Входим...';logBtn.disabled=true;
   const userData=await fbGet('/users/'+login);
@@ -1163,7 +1163,7 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   CUR=userData;setMe(CUR);closeModal();showApp();
 });
 
-function doLogout(){setMe(null);CUR=null;showLanding();}
+function doLogout(){setMe(null);CUR=null;localStorage.removeItem('ENT_ADMIN');showLanding();}
 
 // ════════════════════════
 // APP UI
@@ -1641,6 +1641,7 @@ const tg=document.getElementById('trustGrid');if(tg)trustObserver.observe(tg);
 // AUTO LOGIN
 // ════════════════════════
 (async function(){
+  if(localStorage.getItem('ENT_ADMIN')==='1'){showAdmin();return;}
   const saved=getMe();
   if(!saved||!saved.login)return;
   const fresh=await fbGet('/users/'+saved.login);
