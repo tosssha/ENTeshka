@@ -78,7 +78,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
   border-bottom:1px solid var(--border);
 }
 .navbar-logo{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;color:var(--gold);}
-.navbar-logo span{color:var(--sky);}
+.logo-ent{color:var(--gold)!important;}
+.logo-eshka{color:var(--sky)!important;}
 .navbar-actions{display:flex;gap:10px;}
 .btn-login{
   padding:9px 22px;border-radius:8px;
@@ -116,6 +117,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
   font-weight:900;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px;
 }
 .hero h1 .ac{color:var(--gold);}
+.tw-cursor{display:inline-block;color:var(--gold);animation:blink 0.7s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
 .hero-desc{font-size:1.05rem;color:var(--muted);line-height:1.7;max-width:520px;margin-bottom:36px;}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
 .btn-hero-primary{
@@ -347,8 +350,9 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .q-opt{padding:7px 10px;border-radius:7px;background:#0D0F14;border:1px solid rgba(255,255,255,0.05);font-size:0.74rem;color:var(--muted);}
 .q-opt.correct{background:rgba(46,204,113,0.1);border-color:rgba(46,204,113,0.35);color:var(--green);font-weight:600;}
-.load-more{display:flex;align-items:center;justify-content:center;margin:0 0 20px;padding:14px;border:1px dashed rgba(200,168,75,0.2);border-radius:10px;color:var(--muted);font-size:0.78rem;cursor:pointer;}
-.load-more:hover{border-color:var(--gold);color:var(--gold);}
+.load-more{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 20px;padding:14px 20px;background:linear-gradient(135deg,rgba(200,168,75,0.15),rgba(0,168,224,0.1));border:1.5px solid rgba(200,168,75,0.5);border-radius:12px;color:var(--gold);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.02em;}
+.load-more:hover{background:linear-gradient(135deg,rgba(200,168,75,0.25),rgba(0,168,224,0.15));border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,168,75,0.2);}
+.load-more::before{content:'';display:inline-block;width:18px;height:18px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:18px;text-align:center;}
 .q-img{width:100%;border-radius:8px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer;}
 .q-img-label{font-size:0.65rem;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
 /* Fullscreen image */
@@ -429,7 +433,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 .prof-sec-title{font-family:'Unbounded',sans-serif;font-size:0.72rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
 .cat-progress{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;}
 .cat-row{display:flex;align-items:center;gap:10px;}
-.cat-emoji{font-size:1rem;width:24px;text-align:center;flex-shrink:0;}
+.cat-emoji{font-size:0.55rem;width:24px;height:24px;text-align:center;flex-shrink:0;background:linear-gradient(135deg,rgba(200,168,75,0.3),rgba(0,168,224,0.3));border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-weight:900;font-family:'Unbounded',sans-serif;border:1px solid rgba(200,168,75,0.3);}
 .cat-name{font-size:0.78rem;color:var(--text);width:90px;flex-shrink:0;}
 .cat-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;}
 .cat-bar{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--sky));transition:width 0.6s ease;}
@@ -443,7 +447,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 }
 .ach-card.earned{border-color:rgba(200,168,75,0.4);background:rgba(200,168,75,0.05);}
 .ach-card.locked-ach{opacity:0.4;}
-.ach-icon{font-size:1.4rem;margin-bottom:4px;}
+.ach-icon{font-size:1.6rem;margin-bottom:4px;color:var(--gold);line-height:1;min-height:0;}
 .ach-name{font-size:0.6rem;color:var(--muted);line-height:1.3;}
 .ach-card.earned .ach-name{color:var(--gold);}
 
@@ -625,7 +629,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 ══════════════════════════════ -->
 <div id="landing">
   <nav class="navbar">
-    <div class="navbar-logo">ENTE<span>shka</span></div>
+    <div class="navbar-logo"><span class="logo-ent">ENT</span><span class="logo-eshka">eshka</span></div>
     <div class="navbar-actions">
       <button class="btn-login" onclick="openModal('login')">Войти</button>
       <button class="btn-register" onclick="openModal('register')">Регистрация</button>
@@ -634,8 +638,8 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 
   <div class="hero">
     <div class="hero-inner">
-      <div class="hero-tag">🇰🇿 Подготовка к ЕНТ</div>
-      <h1>ENTeshka —<br><span class="ac">сдай историю</span><br>с первого раза</h1>
+      <div class="hero-tag">Подготовка к ЕНТ</div>
+      <h1 id="heroTitle"></h1>
       <p class="hero-desc">Официальные вопросы ЕНТ по истории Казахстана и основам права. Тесты, тренировки и подробная аналитика — всё в одном месте.</p>
       <div class="hero-btns">
         <button class="btn-hero-primary" onclick="openModal('register')">Начать подготовку →</button>
@@ -698,9 +702,9 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
       <p style="color:var(--muted);font-size:0.85rem;margin-top:8px;">Тысячи казахстанских школьников уже готовятся с ENTeshka</p>
     </div>
     <div class="trust-grid" id="trustGrid">
-      <div class="trust-card"><div class="trust-icon">👥</div><div class="trust-num" id="cnt1">0</div><div class="trust-label">зарегистрированных<br>пользователей</div></div>
-      <div class="trust-card highlight-card"><div class="trust-icon">📚</div><div class="trust-num" id="cnt2">0</div><div class="trust-label">официальных вопросов<br>ЕНТ в базе</div></div>
-      <div class="trust-card"><div class="trust-icon">🏆</div><div class="trust-num" id="cnt3">0</div><div class="trust-label">учеников сдали ЕНТ<br>на 17+ баллов</div></div>
+      <div class="trust-card"><div class="trust-num" id="cnt1">0</div><div class="trust-label">зарегистрированных<br>пользователей</div></div>
+      <div class="trust-card highlight-card"><div class="trust-num" id="cnt2">0</div><div class="trust-label">официальных вопросов<br>ЕНТ в базе</div></div>
+      <div class="trust-card"><div class="trust-num" id="cnt3">0</div><div class="trust-label">учеников сдали ЕНТ<br>на 17+ баллов</div></div>
     </div>
   </div>
 
@@ -710,12 +714,12 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
       <h2 class="sec-title">Всё для успешной сдачи ЕНТ</h2>
     </div>
     <div class="features-grid">
-      <div class="feat-card"><div class="feat-icon">🎯</div><div class="feat-title">Официальные вопросы</div><div class="feat-desc">285+ вопросов из реальных ЕНТ — с картами, текстами и схемами</div></div>
-      <div class="feat-card"><div class="feat-icon">⏱️</div><div class="feat-title">Режим ЕНТ</div><div class="feat-desc">20 вопросов за 24 минуты — точно как на реальном экзамене</div></div>
-      <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Статистика</div><div class="feat-desc">Видишь свой прогресс и слабые темы после каждого теста</div></div>
-      <div class="feat-card"><div class="feat-icon">🔍</div><div class="feat-title">Банк вопросов</div><div class="feat-desc">Учи вопросы по категориям: древний период, ханство, советский период и другие</div></div>
-      <div class="feat-card"><div class="feat-icon">📱</div><div class="feat-title">С любого устройства</div><div class="feat-desc">Готовься с телефона, планшета или компьютера в любое время</div></div>
-      <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">Доступ за 1 минуту</div><div class="feat-desc">Оплата через Kaspi — доступ открываем сразу после оплаты</div></div>
+      <div class="feat-card"><div class="feat-title">Официальные вопросы</div><div class="feat-desc">285+ вопросов из реальных ЕНТ — с картами, текстами и схемами</div></div>
+      <div class="feat-card"><div class="feat-title">Режим ЕНТ</div><div class="feat-desc">20 вопросов за 24 минуты — точно как на реальном экзамене</div></div>
+      <div class="feat-card"><div class="feat-title">Статистика</div><div class="feat-desc">Видишь свой прогресс и слабые темы после каждого теста</div></div>
+      <div class="feat-card"><div class="feat-title">Банк вопросов</div><div class="feat-desc">Учи вопросы по категориям: древний период, ханство, советский период и другие</div></div>
+      <div class="feat-card"><div class="feat-title">С любого устройства</div><div class="feat-desc">Готовься с телефона, планшета или компьютера в любое время</div></div>
+      <div class="feat-card"><div class="feat-title">Доступ за 1 минуту</div><div class="feat-desc">Оплата через Kaspi — доступ открываем сразу после оплаты</div></div>
     </div>
   </div>
 
@@ -770,15 +774,15 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 <div id="app">
   <!-- Desktop nav -->
   <nav class="app-nav">
-    <div class="app-logo">ENTE<span>shka</span></div>
+    <div class="app-logo"><span class="logo-ent">ENT</span><span class="logo-eshka">eshka</span></div>
     <div class="app-nav-links">
       <button class="app-nb active" id="nb-home" onclick="goPage('home')">Главная</button>
-      <button class="app-nb" id="nb-bank" onclick="goPage('bank')">Банк тестов <span class="lock-icon" id="li-bank">🔒</span></button>
-      <button class="app-nb" id="nb-ent" onclick="goPage('ent')">ЕНТ режим <span class="lock-icon" id="li-ent">🔒</span></button>
+      <button class="app-nb" id="nb-bank" onclick="goPage('bank')">Банк тестов <span class="lock-icon" id="li-bank">•</span></button>
+      <button class="app-nb" id="nb-ent" onclick="goPage('ent')">ЕНТ режим <span class="lock-icon" id="li-ent">•</span></button>
       <button class="app-nb" id="nb-prof" onclick="goPage('prof')">Профиль</button>
     </div>
     <div class="nav-right">
-      <div class="sub-status" id="subStatus">❌ Нет подписки</div>
+      <div class="sub-status" id="subStatus">— Нет подписки</div>
       <div class="user-avatar" id="userAv" onclick="goPage('prof')">АС</div>
     </div>
   </nav>
@@ -810,22 +814,22 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
     <!-- HOME -->
     <div id="page-home" class="page active">
       <div class="app-hero">
-        <h2>Привет, <span id="heroName">—</span> 👋</h2>
+        <h2>Привет, <span id="heroName">—</span> </h2>
         <p>Готовься к ЕНТ каждый день — и результат придёт!</p>
         <div class="app-btns">
-          <button class="btn-sky" onclick="goPage('ent')">▶ Начать тест</button>
+          <button class="btn-sky" onclick="goPage('ent')">Начать тест</button>
           <button class="btn-hero-outline" onclick="goPage('bank')" style="font-size:0.72rem;padding:10px 20px;">Банк вопросов</button>
         </div>
         <div class="quick-stats">
           <div class="qs-card"><div class="qs-num" id="homeTestCount">0</div><div class="qs-label">Тестов пройдено</div></div>
           <div class="qs-card"><div class="qs-num" id="homeAvgScore">—</div><div class="qs-label">Средний балл</div></div>
-          <div class="qs-card"><div class="qs-num" id="homeStreak">0🔥</div><div class="qs-label">Дней подряд</div></div>
+          <div class="qs-card"><div class="qs-num" id="homeStreak">0</div><div class="qs-label">Дней подряд</div></div>
         </div>
       </div>
 
       <div class="streak-bar" style="padding-top:16px;">
         <div class="streak-card">
-          <div class="streak-fire">🔥</div>
+          <div class="streak-fire"></div>
           <div class="streak-info">
             <div class="streak-days" id="streakDays">0 дней</div>
             <div class="streak-label">Серия активности</div>
@@ -836,25 +840,25 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 
       <div class="home-grid">
         <div class="home-card" onclick="goPage('bank')">
-          <div class="home-card-icon">📚</div>
+          <div class="home-card-icon"></div>
           <div class="home-card-title">Банк тестов</div>
           <div class="home-card-desc">285+ вопросов по всем темам ЕНТ</div>
           <div class="home-card-arrow">→</div>
         </div>
         <div class="home-card" onclick="goPage('ent')">
-          <div class="home-card-icon">⏱️</div>
+          <div class="home-card-icon"></div>
           <div class="home-card-title">ЕНТ режим</div>
           <div class="home-card-desc">20 вопросов за 24 минуты</div>
           <div class="home-card-arrow">→</div>
         </div>
         <div class="home-card" onclick="goPage('prof')">
-          <div class="home-card-icon">📊</div>
+          <div class="home-card-icon"></div>
           <div class="home-card-title">Статистика</div>
           <div class="home-card-desc">Прогресс, достижения, слабые темы</div>
           <div class="home-card-arrow">→</div>
         </div>
         <div class="home-card" onclick="goPage('sub')">
-          <div class="home-card-icon">⭐</div>
+          <div class="home-card-icon"></div>
           <div class="home-card-title">Подписка</div>
           <div class="home-card-desc">Открой полный доступ от 1 190 ₸</div>
           <div class="home-card-arrow">→</div>
@@ -873,12 +877,12 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
           <button class="filt" onclick="fBank(this,'khanate')">Ханство</button>
           <button class="filt" onclick="fBank(this,'soviet')">XIX–XX</button>
           <button class="filt" onclick="fBank(this,'modern')">Независ.</button>
-          <button class="rev-btn" onclick="toggleAns(this)">● Ответы</button>
+          <button class="rev-btn" onclick="toggleAns(this)">Ответы</button>
         </div>
       </div>
       <div class="bank-body">
         <div id="bankList"></div>
-        <div class="load-more" onclick="loadMore()">+ Ещё 20 вопросов</div>
+        <div class="load-more" onclick="loadMore()">↓ Загрузить ещё 20 вопросов</div>
       </div>
     </div>
 
@@ -893,7 +897,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
             <div><div class="es-n">24</div><div class="es-l">Минуты</div></div>
             <div><div class="es-n">1 балл</div><div class="es-l">За ответ</div></div>
           </div>
-          <button class="btn-sky" onclick="startQuiz()">▶ НАЧАТЬ ТЕСТ</button>
+          <button class="btn-sky" onclick="startQuiz()">НАЧАТЬ ТЕСТ</button>
         </div>
       </div>
       <div id="entQuiz" class="hidden">
@@ -914,12 +918,12 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
           <div class="res-title" id="resTitle">—</div>
           <div class="res-sub" id="resSub"></div>
           <div class="res-grid">
-            <div class="res-cell"><div class="res-n" id="rOk" style="color:var(--green)">0</div><div class="res-l">✅ Правильных</div></div>
-            <div class="res-cell"><div class="res-n" id="rBad" style="color:var(--red)">0</div><div class="res-l">❌ Неверных</div></div>
+            <div class="res-cell"><div class="res-n" id="rOk" style="color:var(--green)">0</div><div class="res-l">Правильных</div></div>
+            <div class="res-cell"><div class="res-n" id="rBad" style="color:var(--red)">0</div><div class="res-l">Неверных</div></div>
             <div class="res-cell"><div class="res-n" id="rTime" style="color:var(--sky)">—</div><div class="res-l">⏱ Время</div></div>
-            <div class="res-cell"><div class="res-n" id="rSc" style="color:var(--gold)">0/20</div><div class="res-l">🎯 Счёт</div></div>
+            <div class="res-cell"><div class="res-n" id="rSc" style="color:var(--gold)">0/20</div><div class="res-l">Счёт</div></div>
           </div>
-          <button class="btn-sky" onclick="startQuiz()">🔄 Ещё раз</button>
+          <button class="btn-sky" onclick="startQuiz()">Ещё раз</button>
         </div>
       </div>
     </div>
@@ -934,29 +938,29 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
           <div style="flex:1;">
             <div class="prof-name" id="profName">Имя Фамилия</div>
             <div class="prof-login" id="profLogin">@login</div>
-            <div class="prof-badge unpaid" id="profBadge">❌ Подписка не активна</div>
+            <div class="prof-badge unpaid" id="profBadge">— Подписка не активна</div>
           </div>
         </div>
 
         <!-- Buy/Active sub block -->
         <div id="buySubBlock" class="buy-sub-block">
-          <div style="font-size:2rem;margin-bottom:10px;">🔒</div>
+          <div style="font-size:2rem;margin-bottom:10px;">•</div>
           <div style="font-family:'Unbounded',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:6px;">Получите полный доступ</div>
           <div style="color:var(--muted);font-size:0.8rem;margin-bottom:14px;">Купите подписку чтобы открыть Банк тестов и ЕНТ режим</div>
           <button class="btn-hero-primary" onclick="goPage('sub')">Выбрать подписку →</button>
         </div>
         <div id="subActiveBlock" class="sub-active-block hidden">
-          ✅ Подписка активна — все разделы доступны!
+          ✓ Подписка активна — все разделы доступны!
         </div>
 
         <!-- Stats grid -->
         <div class="prof-section">
-          <div class="prof-sec-title">📈 Моя статистика</div>
+          <div class="prof-sec-title">Моя статистика</div>
           <div class="prof-stats-grid">
             <div class="pstat"><div class="pstat-n" id="stTests">0</div><div class="pstat-l">Тестов<br>пройдено</div></div>
             <div class="pstat"><div class="pstat-n" id="stAvg">—</div><div class="pstat-l">Средний<br>балл</div></div>
             <div class="pstat"><div class="pstat-n" id="stBest">—</div><div class="pstat-l">Лучший<br>результат</div></div>
-            <div class="pstat"><div class="pstat-n" id="stStreak">0🔥</div><div class="pstat-l">Серия<br>дней</div></div>
+            <div class="pstat"><div class="pstat-n" id="stStreak">0</div><div class="pstat-l">Серия<br>дней</div></div>
           </div>
         </div>
 
@@ -968,46 +972,15 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
           </div>
         </div>
 
-        <!-- Category progress -->
-        <div class="prof-section">
-          <div class="prof-sec-title">📚 Прогресс по темам</div>
-          <div class="cat-progress" id="catProgress">
-            <div class="cat-row">
-              <div class="cat-emoji">🏺</div>
-              <div class="cat-name">Древний</div>
-              <div class="cat-bar-wrap"><div class="cat-bar" id="bar-ancient" style="width:0%"></div></div>
-              <div class="cat-pct" id="pct-ancient">0%</div>
-            </div>
-            <div class="cat-row">
-              <div class="cat-emoji">⚔️</div>
-              <div class="cat-name">Ханство</div>
-              <div class="cat-bar-wrap"><div class="cat-bar" id="bar-khanate" style="width:0%"></div></div>
-              <div class="cat-pct" id="pct-khanate">0%</div>
-            </div>
-            <div class="cat-row">
-              <div class="cat-emoji">🏭</div>
-              <div class="cat-name">XIX–XX век</div>
-              <div class="cat-bar-wrap"><div class="cat-bar" id="bar-soviet" style="width:0%"></div></div>
-              <div class="cat-pct" id="pct-soviet">0%</div>
-            </div>
-            <div class="cat-row">
-              <div class="cat-emoji">🇰🇿</div>
-              <div class="cat-name">Независ.</div>
-              <div class="cat-bar-wrap"><div class="cat-bar" id="bar-modern" style="width:0%"></div></div>
-              <div class="cat-pct" id="pct-modern">0%</div>
-            </div>
-          </div>
-        </div>
-
         <!-- Achievements -->
         <div class="prof-section">
-          <div class="prof-sec-title">🏆 Достижения</div>
+          <div class="prof-sec-title">Достижения</div>
           <div class="achievements-grid" id="achievGrid"></div>
         </div>
 
         <!-- Test history -->
         <div class="prof-section">
-          <div class="prof-sec-title">📋 История тестов</div>
+          <div class="prof-sec-title">История тестов</div>
           <div class="history-list" id="histList">
             <div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:20px;">Пройди первый тест — здесь появится история</div>
           </div>
@@ -1015,7 +988,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 
         <!-- Weak topics -->
         <div class="prof-section" id="weakSection">
-          <div class="prof-sec-title">⚠️ Слабые темы</div>
+          <div class="prof-sec-title">Слабые темы</div>
           <div class="weak-list" id="weakList">
             <div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:20px;">Пройди тесты — здесь появятся рекомендации</div>
           </div>
@@ -1029,7 +1002,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
     <div id="page-sub" class="page">
       <div class="sub-page">
         <h2>Выберите подписку</h2>
-        <p>Напишите нам в Telegram после выбора тарифа — доступ откроем за 1 минуту ⚡</p>
+        <p>Напишите нам в Telegram после выбора тарифа — доступ откроем за 1 минуту </p>
         <div class="sub-plans">
           <div class="sp-card" id="sp1" onclick="pickPlan(1)">
             <div class="sp-dur">1 месяц</div>
@@ -1052,7 +1025,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
           <h3>Как оплатить?</h3>
           <div class="how-step"><div class="how-num">1</div><div class="how-text">Выберите тариф выше</div></div>
           <div class="how-step"><div class="how-num">2</div><div class="how-text">Нажмите кнопку «Написать в Telegram» — ваш логин и тариф вставятся автоматически</div></div>
-          <div class="how-step"><div class="how-num">3</div><div class="how-text">Мы пришлём реквизиты Kaspi. После оплаты — <b>доступ за 1 минуту ⚡</b></div></div>
+          <div class="how-step"><div class="how-num">3</div><div class="how-text">Мы пришлём реквизиты Kaspi. После оплаты — <b>доступ за 1 минуту </b></div></div>
         </div>
         <button class="tg-btn" onclick="openTG()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="#0D0F14"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.026 9.546c-.149.658-.538.818-1.092.508l-3.017-2.222-1.456 1.401c-.161.161-.296.296-.607.296l.217-3.063 5.576-5.035c.242-.217-.054-.337-.375-.12L7.008 14.6l-2.95-.921c-.641-.201-.655-.641.136-.949l11.536-4.448c.534-.193 1.001.13.832.966z"/></svg>
@@ -1073,11 +1046,11 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 <div id="adminPage" style="display:none;min-height:100vh;background:var(--dark);">
   <div class="admin-wrap">
     <div class="admin-title">
-      🔧 Админ панель
+      Админ панель
       <button onclick="doLogout()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:0.72rem;font-family:'Inter',sans-serif;">Выйти</button>
     </div>
     <div class="admin-card">
-      <div class="admin-ct">➕ Выдать подписку</div>
+      <div class="admin-ct">Выдать подписку</div>
       <div class="admin-row">
         <div class="af"><label>Логин пользователя</label><input id="aLogin" type="text" placeholder="aidar1"></div>
         <div class="af"><label>Тариф</label><select id="aPlan"><option value="1">1 месяц</option><option value="3" selected>3 месяца</option><option value="6">6 месяцев</option></select></div>
@@ -1092,7 +1065,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
         <div class="ast"><div class="ast-n" id="aStat3">—</div><div class="ast-l">Всего тестов</div></div>
         <div class="ast"><div class="ast-n" id="aStat4">—</div><div class="ast-l">Средний балл</div></div>
       </div>
-      <div class="admin-ct">👥 Все пользователи</div>
+      <div class="admin-ct">Все пользователи</div>
       <input class="admin-search" id="adminSearch" type="text" placeholder="Поиск по логину или имени..." oninput="filterUsers()">
       <div class="sort-btns">
         <button class="sort-btn active" onclick="sortUsers('reg',this)">По регистрации</button>
@@ -1176,15 +1149,15 @@ document.getElementById('regBtn').addEventListener('click',async function(){
   const pass=document.getElementById('rPass').value;
   const pass2=document.getElementById('rPass2').value;
   document.getElementById('rErr').style.display='none';
-  if(!name||!sur)return showErr('rErr','⚠️ Введите имя и фамилию');
-  if(login.length<3)return showErr('rErr','⚠️ Логин минимум 3 символа');
-  if(!/^[a-z0-9_]+$/.test(login))return showErr('rErr','⚠️ Логин: только a-z, цифры, _');
-  if(pass.length<6)return showErr('rErr','⚠️ Пароль минимум 6 символов');
-  if(pass!==pass2)return showErr('rErr','⚠️ Пароли не совпадают');
+  if(!name||!sur)return showErr('rErr','Введите имя и фамилию');
+  if(login.length<3)return showErr('rErr','Логин минимум 3 символа');
+  if(!/^[a-z0-9_]+$/.test(login))return showErr('rErr','Логин: только a-z, цифры, _');
+  if(pass.length<6)return showErr('rErr','Пароль минимум 6 символов');
+  if(pass!==pass2)return showErr('rErr','Пароли не совпадают');
   const regBtn=document.getElementById('regBtn');
   regBtn.textContent='Проверяем...';regBtn.disabled=true;
   const existing=await fbGet('/users/'+login);
-  if(existing){regBtn.textContent='СОЗДАТЬ АККАУНТ →';regBtn.disabled=false;return showErr('rErr','⚠️ Логин «'+login+'» уже занят');}
+  if(existing){regBtn.textContent='СОЗДАТЬ АККАУНТ →';regBtn.disabled=false;return showErr('rErr','Логин «'+login+'» уже занят');}
   const userData={name,sur,login,pass,paid:false,paidUntil:'',createdAt:new Date().toLocaleDateString('ru-RU')};
   await fbSet('/users/'+login,userData);
   CUR=userData;setMe(CUR);
@@ -1199,19 +1172,19 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   const login=document.getElementById('lLogin').value.trim().toLowerCase();
   const pass=document.getElementById('lPass').value;
   document.getElementById('lErr').style.display='none';
-  if(!login||!pass)return showErr('lErr','⚠️ Заполните все поля');
+  if(!login||!pass)return showErr('lErr','Заполните все поля');
   if(login===ADMIN.login){
     const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pass));
     const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
     if(hash==='4d73d50c6c43b331d1ccce802bdfa7c816b2772b3400949a4675ebcc54705300'){localStorage.setItem('ENT_ADMIN','1');closeModal();showAdmin();return;}
-    else return showErr('lErr','⚠️ Неверный пароль');
+    else return showErr('lErr','Неверный пароль');
   }
   const logBtn=document.getElementById('logBtn');
   logBtn.textContent='Входим...';logBtn.disabled=true;
   const userData=await fbGet('/users/'+login);
   logBtn.textContent='ВОЙТИ →';logBtn.disabled=false;
-  if(!userData)return showErr('lErr','⚠️ Логин не найден');
-  if(userData.pass!==pass)return showErr('lErr','⚠️ Неверный пароль');
+  if(!userData)return showErr('lErr','Логин не найден');
+  if(userData.pass!==pass)return showErr('lErr','Неверный пароль');
   CUR=userData;setMe(CUR);closeModal();showApp();
 });
 
@@ -1234,9 +1207,9 @@ function applyUI(){
   document.getElementById('profLogin').textContent='@'+CUR.login;
   document.getElementById('heroName').textContent=CUR.name;
   if(CUR.paid){
-    document.getElementById('subStatus').textContent='✅ Подписка';
+    document.getElementById('subStatus').textContent='✓ Подписка';
     document.getElementById('subStatus').className='sub-status active';
-    document.getElementById('profBadge').textContent='✅ Подписка активна'+(CUR.paidUntil?' до '+CUR.paidUntil:'');
+    document.getElementById('profBadge').textContent='✓ Подписка активна'+(CUR.paidUntil?' до '+CUR.paidUntil:'');
     document.getElementById('profBadge').className='prof-badge paid';
     document.getElementById('buySubBlock').classList.add('hidden');
     document.getElementById('subActiveBlock').classList.remove('hidden');
@@ -1245,9 +1218,9 @@ function applyUI(){
       const li=document.getElementById('li-'+id);if(li)li.style.display='none';
     });
   } else {
-    document.getElementById('subStatus').textContent='❌ Нет подписки';
+    document.getElementById('subStatus').textContent='— Нет подписки';
     document.getElementById('subStatus').className='sub-status';
-    document.getElementById('profBadge').textContent='❌ Подписка не активна';
+    document.getElementById('profBadge').textContent='— Подписка не активна';
     document.getElementById('profBadge').className='prof-badge unpaid';
     document.getElementById('buySubBlock').classList.remove('hidden');
     document.getElementById('subActiveBlock').classList.add('hidden');
@@ -1289,14 +1262,14 @@ function renderBank(){
   document.getElementById('bankList').innerHTML=data.slice(0,bankShown).map((q,i)=>`
     <div class="q-block">
       <div class="q-num">ВОПРОС ${i+1}</div>
-      ${q.img?`<div class="q-img-label">🗺 Используй изображение для ответа</div><img class="q-img" src="${q.img}" alt="карта" onclick="openImg('${q.img}')">`:``}
+      ${q.img?`<div class="q-img-label">Используй изображение для ответа</div><img class="q-img" src="${q.img}" alt="карта" onclick="openImg('${q.img}')">`:``}
       <div class="q-text">${q.q}</div>
       <div class="q-opts">${q.opts.map((o,oi)=>`<div class="q-opt${ansVisible&&oi===q.ans?' correct':''}">${['А','Б','В','Г'][oi]}) ${o}</div>`).join('')}</div>
     </div>`).join('');
 }
 function openImg(src){document.getElementById('imgFull').src=src;document.getElementById('imgOverlay').classList.add('open');}
 function fBank(btn,f){document.querySelectorAll('.filt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');bankFilter=f;bankShown=20;renderBank();}
-function toggleAns(btn){ansVisible=!ansVisible;btn.textContent=ansVisible?'● Скрыть':'● Ответы';btn.style.color=ansVisible?'var(--red)':'var(--green)';renderBank();}
+function toggleAns(btn){ansVisible=!ansVisible;btn.textContent=ansVisible?'Скрыть':'Ответы';btn.style.color=ansVisible?'var(--red)':'var(--green)';renderBank();}
 function loadMore(){bankShown+=20;renderBank();}
 
 // ════════════════════════
@@ -1330,8 +1303,8 @@ function renderQ(){
   document.getElementById('qFill').style.width=((qIdx+1)/20*100)+'%';
   document.getElementById('qText').textContent=q.q;
   document.getElementById('btnNext').disabled=true;
-  document.getElementById('btnNext').textContent=qIdx===19?'Завершить ✓':'Далее →';
-  const imgHtml=q.img?`<div style="font-size:0.7rem;color:var(--muted);margin-bottom:6px;">🗺 Используй карту для ответа</div><img class="quiz-img" src="${q.img}" alt="карта" onclick="openImg('${q.img}')">`:``; 
+  document.getElementById('btnNext').textContent=qIdx===19?'Завершить':'Далее →';
+  const imgHtml=q.img?`<div style="font-size:0.7rem;color:var(--muted);margin-bottom:6px;">Используй карту для ответа</div><img class="quiz-img" src="${q.img}" alt="карта" onclick="openImg('${q.img}')">`:``; 
   document.getElementById('qOpts').innerHTML=imgHtml+q.opts.map((o,i)=>`
     <div class="qopt" onclick="pickOpt(this,${i})">
       <div class="opt-l">${['А','Б','В','Г'][i]}</div>${o}
@@ -1361,10 +1334,10 @@ function finishQuiz(){
   document.getElementById('rBad').textContent=20-qSc;
   document.getElementById('rTime').textContent=mm+':'+ss;
   document.getElementById('rSc').textContent=qSc+'/20';
-  const [t,s]=pct>=90?['Отлично! 🏆','Блестящий результат!']:
-               pct>=70?['Хорошо! 👍','Ещё немного практики.']:
-               pct>=50?['Неплохо 📚','Повторите слабые темы.']:
-                       ['Нужно подтянуть 💪','Пройдитесь по банку вопросов.'];
+  const [t,s]=pct>=90?['Отлично!','Блестящий результат!']:
+               pct>=70?['Хорошо!','Ещё немного практики.']:
+               pct>=50?['Неплохо','Повторите слабые темы.']:
+                       ['Нужно подтянуть','Пройдитесь по банку вопросов.'];
   document.getElementById('resTitle').textContent=t;
   document.getElementById('resSub').textContent=s;
 
@@ -1439,8 +1412,8 @@ function renderProfile(){
   
   document.getElementById('stAvg').textContent=hist.length?avg+'/20':'—';
   document.getElementById('stBest').textContent=hist.length?best+'/20':'—';
-  document.getElementById('stStreak').textContent=(stats.streak||0)+'🔥';
-  document.getElementById('homeStreak').textContent=(stats.streak||0)+'🔥';
+  document.getElementById('stStreak').textContent=(stats.streak||0)+'';
+  document.getElementById('homeStreak').textContent=(stats.streak||0)+'';
   document.getElementById('homeAvgScore').textContent=hist.length?avg+'/20':'—';
 
   // Streak dots
@@ -1483,14 +1456,14 @@ function renderProfile(){
 
   // Achievements
   const ACHIEVEMENTS=[
-    {id:'first',icon:'🎯',name:'Первый тест',desc:'Пройди первый тест',earned:hist.length>=1},
-    {id:'five',icon:'📚',name:'5 тестов',desc:'Пройди 5 тестов',earned:hist.length>=5},
-    {id:'ten',icon:'🔟',name:'10 тестов',desc:'Пройди 10 тестов',earned:hist.length>=10},
-    {id:'perfect',icon:'💯',name:'Перфект',desc:'Набери 20/20',earned:hist.some(h=>h.score===20)},
-    {id:'half',icon:'⭐',name:'Полбалла',desc:'Набери 10+ баллов',earned:hist.some(h=>h.score>=10)},
-    {id:'good',icon:'🏅',name:'Отличник',desc:'Набери 16+ баллов',earned:hist.some(h=>h.score>=16)},
-    {id:'streak3',icon:'🔥',name:'3 дня',desc:'Серия 3 дня',earned:(stats.streak||0)>=3},
-    {id:'streak7',icon:'⚡',name:'Неделя',desc:'Серия 7 дней',earned:(stats.streak||0)>=7},
+    {id:'first',icon:'',name:'Первый тест',desc:'Пройди первый тест',earned:hist.length>=1},
+    {id:'five',icon:'',name:'5 тестов',desc:'Пройди 5 тестов',earned:hist.length>=5},
+    {id:'ten',icon:'',name:'10 тестов',desc:'Пройди 10 тестов',earned:hist.length>=10},
+    {id:'perfect',icon:'',name:'Перфект',desc:'Набери 20/20',earned:hist.some(h=>h.score===20)},
+    {id:'half',icon:'',name:'Полбалла',desc:'Набери 10+ баллов',earned:hist.some(h=>h.score>=10)},
+    {id:'good',icon:'',name:'Отличник',desc:'Набери 16+ баллов',earned:hist.some(h=>h.score>=16)},
+    {id:'streak3',icon:'',name:'3 дня',desc:'Серия 3 дня',earned:(stats.streak||0)>=3},
+    {id:'streak7',icon:'',name:'Неделя',desc:'Серия 7 дней',earned:(stats.streak||0)>=7},
   ];
   const ag=document.getElementById('achievGrid');
   if(ag){
@@ -1532,7 +1505,7 @@ function renderProfile(){
     }).filter(c=>c.total>0&&c.pct<70).sort((a,b)=>a.pct-b.pct);
 
     if(!weakCats.length){
-      wl.innerHTML='<div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:20px;">'+(hist.length?'Слабых тем нет — так держать! 🎉':'Пройди тесты — здесь появятся рекомендации')+'</div>';
+      wl.innerHTML='<div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:20px;">'+(hist.length?'Слабых тем нет — так держать!':'Пройди тесты — здесь появятся рекомендации')+'</div>';
     } else {
       wl.innerHTML=weakCats.map(w=>`
         <div class="weak-item">
@@ -1560,7 +1533,7 @@ function updateHomeStats(){
   document.getElementById('homeTestCount').textContent=hist.length;
   const avg=hist.length?Math.round(hist.reduce((a,h)=>a+h.score,0)/hist.length):0;
   document.getElementById('homeAvgScore').textContent=hist.length?avg+'/20':'—';
-  document.getElementById('homeStreak').textContent=(stats.streak||0)+'🔥';
+  document.getElementById('homeStreak').textContent=(stats.streak||0)+'';
 }
 
 // ════════════════════════
@@ -1648,11 +1621,11 @@ function renderUserList(){
         <div class="ur-name">${u.name} ${u.sur}</div>
         <div class="ur-login">@${u.login}${u.paidUntil?' · до '+u.paidUntil:''}${u.createdAt?' · рег. '+u.createdAt:''}</div>
         <div class="ur-stats">
-          <div class="ur-stat gold">📝 ${tests} тестов</div>
+          <div class="ur-stat gold">${tests} тестов</div>
           <div class="ur-stat good">⭐ avg ${avg}</div>
-          <div class="ur-stat gold">🏆 best ${best}</div>
+          <div class="ur-stat gold">Лучший: ${best}</div>
           <div class="ur-stat sky">⏱ ${mins}</div>
-          ${last!=='—'?`<div class="ur-stat">📅 ${last}</div>`:''}
+          ${last!=='—'?`<div class="ur-stat">${last}</div>`:''}
         </div>
       </div>
       <div class="ur-badge ${u.paid?'badge-on':'badge-off'}">${u.paid?'✓ Активна':'Нет'}</div>
@@ -1690,6 +1663,40 @@ const trustObserver=new IntersectionObserver((entries)=>{
 const tg=document.getElementById('trustGrid');if(tg)trustObserver.observe(tg);
 
 // ════════════════════════
+// TYPEWRITER
+(function(){
+  const el=document.getElementById('heroTitle');
+  if(!el)return;
+  const parts=[
+    {text:'ENTeshka —',cls:''},
+    {text:'\n',cls:'br'},
+    {text:'сдай историю',cls:'ac'},
+    {text:'\n',cls:'br'},
+    {text:'с первого раза',cls:''},
+  ];
+  let flat=[];
+  parts.forEach(p=>{
+    if(p.cls==='br'){flat.push({ch:'\n',cls:''});}
+    else{[...p.text].forEach(ch=>flat.push({ch,cls:p.cls}));}
+  });
+  let i=0;
+  function buildHTML(){
+    let html='';let span='';let curCls='';
+    flat.slice(0,i).forEach(({ch,cls})=>{
+      if(ch==='\n'){if(span)html+=`<span class="${curCls}">${span}</span>`;html+='<br>';span='';curCls='';}
+      else if(cls!==curCls){if(span)html+=`<span class="${curCls}">${span}</span>`;span=ch;curCls=cls;}
+      else{span+=ch;}
+    });
+    if(span)html+=`<span class="${curCls}">${span}</span>`;
+    return html+'<span class="tw-cursor">|</span>';
+  }
+  function type(){
+    if(i<=flat.length){el.innerHTML=buildHTML();i++;setTimeout(type,i<=flat.length?55:800);}
+    else{el.innerHTML=el.innerHTML.replace('<span class="tw-cursor">|</span>','');}
+  }
+  setTimeout(type,300);
+})();
+
 // AUTO LOGIN
 // ════════════════════════
 (async function(){
