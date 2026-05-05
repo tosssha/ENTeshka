@@ -1214,7 +1214,13 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   if(login===ADMIN.login){
     const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pass));
     const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    if(hash==='4d73d50c6c43b331d1ccce802bdfa7c816b2772b3400949a4675ebcc54705300'){localStorage.setItem('ENT_ADMIN','1');closeModal();showAdmin();return;}
+    if(hash==='4d73d50c6c43b331d1ccce802bdfa7c816b2772b3400949a4675ebcc54705300'){
+      const tokenBuf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('enteshka_admin_session_takhir777'));
+      const tokenHex=Array.from(new Uint8Array(tokenBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+      localStorage.setItem('ENT_ADMIN','1');
+      localStorage.setItem('ENT_ADMIN_TOKEN',tokenHex);
+      closeModal();showAdmin();return;
+    }
     else return showErr('lErr','Неверный пароль');
   }
   const logBtn=document.getElementById('logBtn');
@@ -1226,7 +1232,7 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   CUR=userData;setMe(CUR);closeModal();showApp();
 });
 
-function doLogout(){setMe(null);CUR=null;localStorage.removeItem('ENT_ADMIN');showLanding();}
+function doLogout(){setMe(null);CUR=null;localStorage.removeItem('ENT_ADMIN');localStorage.removeItem('ENT_ADMIN_TOKEN');showLanding();}
 
 // ════════════════════════
 // APP UI
@@ -1738,7 +1744,14 @@ const tg=document.getElementById('trustGrid');if(tg)trustObserver.observe(tg);
 // AUTO LOGIN
 // ════════════════════════
 (async function(){
-  if(localStorage.getItem('ENT_ADMIN')==='1'){showAdmin();return;}
+  if(localStorage.getItem('ENT_ADMIN')==='1'){
+    // Verify password hash is still valid - check against stored session token
+    const adminToken=localStorage.getItem('ENT_ADMIN_TOKEN');
+    const expectedToken=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('enteshka_admin_session_takhir777'));
+    const expectedHex=Array.from(new Uint8Array(expectedToken)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(adminToken===expectedHex){showAdmin();return;}
+    else{localStorage.removeItem('ENT_ADMIN');localStorage.removeItem('ENT_ADMIN_TOKEN');}
+  }
   const saved=getMe();
   if(!saved||!saved.login)return;
   const fresh=await fbGet('/users/'+saved.login);
