@@ -1302,7 +1302,7 @@ async function handleGoogleCredential(response) {
     const name = payload.given_name || payload.name.split(' ')[0] || 'Пользователь';
     const sur = payload.family_name || '';
     const avatar = payload.picture || '';
-    const login = 'g_' + googleId.slice(-10); // unique login based on Google ID
+    const login = email.replace('@', '_at_').replace(/\./g, '_'); // use email as login
     
     // Check if user exists in Firebase
     let userData = await fbGet('/users/' + login);
