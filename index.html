@@ -1534,22 +1534,55 @@ function finishQuiz(){
 function saveTestResult(score, elapsedSec, timeStr){
   // Also save to Firebase for admin stats
   if(CUR && CUR.login){
+    // Save full stats to Firebase for cross-device sync
     fbGet('/stats/'+CUR.login).then(existing=>{
-      const s = existing || {totalTests:0,totalScore:0,totalTime:0,bestScore:0};
+      const s = existing || {totalTests:0,totalScore:0,totalTime:0,bestScore:0,history:[],streak:0,lastDay:'',catRight:{},catTotal:{}};
+      const today=new Date().toLocaleDateString('ru-RU');
+      const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+      const yd=yesterday.toLocaleDateString('ru-RU');
+      
+      // Streak
+      let streak = s.streak||0;
+      let lastDay = s.lastDay||'';
+      if(lastDay!==today){
+        if(lastDay===yd){streak++;}
+        else{streak=1;}
+        lastDay=today;
+      }
+      
+      // History
+      const history = s.history||[];
+      history.unshift({score,timeStr,date:today,pct:Math.round(score/20*100)});
+      if(history.length>20)history.splice(20);
+      
+      // Category stats
+      const catRight = s.catRight||{};
+      const catTotal = s.catTotal||{};
+      Object.keys(qCatTotal).forEach(cat=>{
+        catRight[cat]=(catRight[cat]||0)+(qCatRight[cat]||0);
+        catTotal[cat]=(catTotal[cat]||0)+qCatTotal[cat];
+      });
+      
       const newTotal = (s.totalTests||0)+1;
       const newScore = (s.totalScore||0)+score;
-      const newTime = (s.totalTime||0)+elapsedSec;
       const newBest = Math.max(s.bestScore||0, score);
-      const avg = Math.round(newScore/newTotal*10)/10;
-      fbSet('/stats/'+CUR.login, {
+      
+      const fullStats = {
         totalTests: newTotal,
         totalScore: newScore,
-        totalTime: newTime,
+        totalTime: (s.totalTime||0)+elapsedSec,
         bestScore: newBest,
-        avgScore: avg,
-        lastTest: new Date().toLocaleDateString('ru-RU')
-      });
+        avgScore: Math.round(newScore/newTotal*10)/10,
+        lastTest: today,
+        history, streak, lastDay, catRight, catTotal
+      };
+      
+      fbSet('/stats/'+CUR.login, fullStats);
+      
+      // Also update localStorage to match
+      localStorage.setItem('ENT_STATS', JSON.stringify({history, streak, lastDay, catRight, catTotal}));
     });
+    return; // Firebase handles everything
   }
   const stats=getStats();
   const today=new Date().toLocaleDateString('ru-RU');
@@ -1586,6 +1619,24 @@ function saveTestResult(score, elapsedSec, timeStr){
 // PROFILE RENDER
 // ════════════════════════
 function renderProfile(){
+  if(CUR && CUR.login){
+    fbGet('/stats/'+CUR.login).then(cloudStats=>{
+      if(cloudStats && cloudStats.history){
+        localStorage.setItem('ENT_STATS', JSON.stringify({
+          history: cloudStats.history||[],
+          streak: cloudStats.streak||0,
+          lastDay: cloudStats.lastDay||'',
+          catRight: cloudStats.catRight||{},
+          catTotal: cloudStats.catTotal||{}
+        }));
+      }
+      renderProfileUI();
+    });
+    return;
+  }
+  renderProfileUI();
+}
+function renderProfileUI(){
   const stats=getStats();
   const hist=stats.history||[];
   
