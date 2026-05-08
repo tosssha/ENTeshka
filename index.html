@@ -1260,30 +1260,35 @@ document.getElementById('logBtn').addEventListener('click',async function(){
 const GOOGLE_CLIENT_ID = '587980924538-cck8keiusj7sk6gqqa0brurn5gu1llmn.apps.googleusercontent.com';
 
 function googleSignIn() {
-  if (typeof google === 'undefined') {
-    alert('Google Sign-In не загрузился. Проверьте интернет-соединение.');
-    return;
-  }
-  const client = google.accounts.oauth2.initTokenClient({
+  // Universal redirect flow - works in all browsers including Yandex
+  const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: window.location.origin + window.location.pathname,
+    response_type: 'token id_token',
     scope: 'openid email profile',
-    callback: () => {},
+    nonce: Math.random().toString(36).slice(2),
+    prompt: 'select_account'
   });
-  // Use One Tap / popup flow
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleCredential,
-    auto_select: false,
-  });
-  google.accounts.id.prompt((notification) => {
-    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-      // Fallback to popup
-      google.accounts.id.renderButton(
-        document.createElement('div'),
-        { theme: 'outline', size: 'large' }
-      );
-    }
-  });
+  // Save current page state
+  sessionStorage.setItem('googleAuthReturn', '1');
+  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+}
+
+// Handle Google redirect callback on page load
+function checkGoogleRedirect() {
+  const hash = window.location.hash;
+  if (!hash || !sessionStorage.getItem('googleAuthReturn')) return;
+  
+  sessionStorage.removeItem('googleAuthReturn');
+  
+  const params = new URLSearchParams(hash.slice(1));
+  const idToken = params.get('id_token');
+  
+  if (idToken) {
+    // Clear hash from URL
+    history.replaceState(null, '', window.location.pathname);
+    handleGoogleCredential({credential: idToken});
+  }
 }
 
 async function handleGoogleCredential(response) {
@@ -1360,15 +1365,9 @@ async function handleGoogleCredential(response) {
   }
 }
 
-// Initialize Google One Tap on page load
+// Check Google redirect on page load
 window.addEventListener('load', function() {
-  if (typeof google !== 'undefined') {
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleCredential,
-      auto_select: false,
-    });
-  }
+  checkGoogleRedirect();
 });
 
 function doLogout(){setMe(null);CUR=null;localStorage.removeItem('ENT_ADMIN');localStorage.removeItem('ENT_ADMIN_TOKEN');localStorage.removeItem('ENT_STATS');showLanding();}
@@ -1945,6 +1944,9 @@ const tg=document.getElementById('trustGrid');if(tg)trustObserver.observe(tg);
     if(adminToken===expectedHex){showAdmin();return;}
     else{localStorage.removeItem('ENT_ADMIN');localStorage.removeItem('ENT_ADMIN_TOKEN');}
   }
+  // First check if returning from Google OAuth
+  checkGoogleRedirect();
+  
   const saved=getMe();
   if(!saved||!saved.login)return;
   const fresh=await fbGet('/users/'+saved.login);
