@@ -373,7 +373,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
 .streak-dot.done{background:var(--gold);}
 
 /* BANK */
-.bank-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);}
+.bank-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:50;background:var(--card);}
 .bank-head h2{font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:700;}
 .bank-head h2 span{color:var(--gold);}
 .bank-meta{color:var(--muted);font-size:0.75rem;margin-top:3px;}
@@ -383,11 +383,7 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);ove
   background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:0.72rem;cursor:pointer;
 }
 .filt.active,.filt:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,168,75,0.07);}
-.rev-btn{
-  margin-left:auto;padding:6px 12px;border-radius:20px;
-  border:1px solid rgba(46,204,113,0.3);background:rgba(46,204,113,0.07);
-  color:var(--green);font-family:'Inter',sans-serif;font-size:0.72rem;cursor:pointer;
-}
+.rev-btn{padding:7px 16px;border-radius:20px;border:1.5px solid var(--green);background:transparent;color:var(--green);font-family:'Unbounded',sans-serif;font-size:0.68rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
 .bank-body{padding:16px 24px 100px;}
 .q-block{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:16px 18px;margin-bottom:8px;}
 .q-num{font-size:0.62rem;color:var(--muted);margin-bottom:5px;letter-spacing:0.5px;}
@@ -1221,6 +1217,8 @@ document.getElementById('regBtn').addEventListener('click',async function(){
   await fbSet('/users/'+login,userData);
   CUR=userData;setMe(CUR);
   regBtn.textContent='СОЗДАТЬ АККАУНТ →';regBtn.disabled=false;
+  // New user - clear stats
+  localStorage.setItem('ENT_STATS', JSON.stringify({history:[],streak:0,lastDay:'',catRight:{},catTotal:{}}));
   closeModal();showApp();
 });
 
@@ -1250,7 +1248,21 @@ document.getElementById('logBtn').addEventListener('click',async function(){
   logBtn.textContent='ВОЙТИ →';logBtn.disabled=false;
   if(!userData)return showErr('lErr','Логин не найден');
   if(userData.pass!==pass)return showErr('lErr','Неверный пароль');
-  CUR=userData;setMe(CUR);closeModal();showApp();
+  CUR=userData;setMe(CUR);
+  // Load stats from Firebase for cross-device sync
+  const cloudStats = await fbGet('/stats/'+login);
+  if(cloudStats && cloudStats.history){
+    localStorage.setItem('ENT_STATS', JSON.stringify({
+      history: cloudStats.history||[],
+      streak: cloudStats.streak||0,
+      lastDay: cloudStats.lastDay||'',
+      catRight: cloudStats.catRight||{},
+      catTotal: cloudStats.catTotal||{}
+    }));
+  } else {
+    localStorage.setItem('ENT_STATS', JSON.stringify({history:[],streak:0,lastDay:'',catRight:{},catTotal:{}}));
+  }
+  closeModal();showApp();
 });
 
 
