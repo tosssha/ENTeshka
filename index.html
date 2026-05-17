@@ -1145,6 +1145,7 @@ async function fbPatch(p,d){try{await fetch(FB+p+'.json',{method:'PATCH',headers
 
 const ADMIN={login:'admin'};
 const PLANS={1:'1 месяц — 1 190 ₸',2:'3 месяца — 2 990 ₸',3:'6 месяцев — 5 590 ₸'};
+const PLAN_MONTHS={1:1,2:3,3:6};
 let CUR=null,CUR_PLAN=2,ansVisible=false,bankFilter='all',bankShown=20;
 let qqs=[],qIdx=0,qSc=0,qTmr=null,qSec=1440,qStart=0;
 
@@ -1443,8 +1444,9 @@ function goPage(name){
 function pickPlan(n){CUR_PLAN=n;[1,2,3].forEach(i=>document.getElementById('sp'+i).classList.toggle('sel',i===n));}
 function openTG(){
   const login=CUR?CUR.login:'???';
-  const msg=encodeURIComponent('Привет! Хочу купить ENTeshka\nЛогин: '+login+'\nТариф: '+PLANS[CUR_PLAN]);
-  window.open('https://t.me/panamera770?text='+msg,'_blank');
+  const planNames={1:'1 месяц — 1 190 ₸',2:'3 месяца — 2 990 ₸',3:'6 месяцев — 5 590 ₸'};
+  const msg=encodeURIComponent('Хочу подписку на '+planNames[CUR_PLAN]+'\nМой логин: '+login);
+  window.open('https://t.me/ENTeshkabot?start='+encodeURIComponent(login+'_'+CUR_PLAN),'_blank');
 }
 
 // ════════════════════════
