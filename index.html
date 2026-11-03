@@ -828,12 +828,12 @@ requestAnimationFrame(step)})})();
         <div class="how-block">
           <h3>Как оплатить?</h3>
           <div class="how-step"><div class="how-num">1</div><div class="how-text">Выберите тариф выше</div></div>
-          <div class="how-step"><div class="how-num">2</div><div class="how-text">Нажмите кнопку ниже: откроется чат в Telegram с готовым сообщением, где уже указаны ваш логин и тариф</div></div>
-          <div class="how-step"><div class="how-num">3</div><div class="how-text">Мы пришлём номер Kaspi. Переведи деньги → скинь скриншот → <b>доступ в течение 5 минут</b></div></div>
+          <div class="how-step"><div class="how-num">2</div><div class="how-text">Нажмите кнопку ниже: откроется Telegram-бот с реквизитами и вашим тарифом</div></div>
+          <div class="how-step"><div class="how-num">3</div><div class="how-text">Переведите деньги, нажмите «Я оплатил(а)» и введите имя плательщика. <b>Доступ откроется в течение 5 минут</b></div></div>
         </div>
         <button class="tg-btn" onclick="openTG()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="#0D0F14"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.026 9.546c-.149.658-.538.818-1.092.508l-3.017-2.222-1.456 1.401c-.161.161-.296.296-.607.296l.217-3.063 5.576-5.035c.242-.217-.054-.337-.375-.12L7.008 14.6l-2.95-.921c-.641-.201-.655-.641.136-.949l11.536-4.448c.534-.193 1.001.13.832.966z"/></svg>
-          НАПИСАТЬ В TELEGRAM @panamera770
+          ОПЛАТИТЬ ЧЕРЕЗ TELEGRAM
         </button>
       </div>
     </div>
@@ -1160,8 +1160,10 @@ function goPage(name){
 // SUBSCRIPTION
 // ════════════════════════
 function pickPlan(n){CUR_PLAN=n;[1,2,3].forEach(i=>document.getElementById('sp'+i).classList.toggle('sel',i===n));}
+const BOT_USERNAME='ENTeshkabot';
 function openTG(){
   const login=CUR?CUR.login:'???';
+  if(BOT_USERNAME){window.open('https://t.me/'+BOT_USERNAME+'?start=p'+CUR_PLAN+'_'+login,'_blank');return;}
   const pn={1:'1 месяц — 1 190 ₸',2:'3 месяца — 2 990 ₸',3:'6 месяцев — 5 590 ₸'};
   const m=encodeURIComponent('Привет! Хочу купить ENTeshka\nЛогин: '+login+'\nТариф: '+pn[CUR_PLAN]);
   window.open('https://t.me/panamera770?text='+m,'_blank');
