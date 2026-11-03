@@ -402,6 +402,8 @@ button:active{transform:scale(.97)!important}
 @media(max-width:768px){.plans{gap:22px}}
 </style>
 <meta name="google-signin-client_id" content="587980924538-cck8keiusj7sk6gqqa0brurn5gu1llmn.apps.googleusercontent.com">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -804,7 +806,7 @@ requestAnimationFrame(step)})})();
     <div id="page-sub" class="page">
       <div class="sub-page">
         <h2>Выберите подписку</h2>
-        <p>Напишите нам в Telegram после выбора тарифа — доступ откроем за 1 минуту </p>
+        <p>Напишите нам в Telegram после выбора тарифа — доступ откроем в течение 5 минут </p>
         <div class="sub-plans">
           <div class="sp-card" id="sp1" onclick="pickPlan(1)">
             <div class="sp-dur">1 месяц</div>
@@ -826,8 +828,8 @@ requestAnimationFrame(step)})})();
         <div class="how-block">
           <h3>Как оплатить?</h3>
           <div class="how-step"><div class="how-num">1</div><div class="how-text">Выберите тариф выше</div></div>
-          <div class="how-step"><div class="how-num">2</div><div class="how-text">Нажмите кнопку ниже — бот автоматически получит ваш логин и тариф</div></div>
-          <div class="how-step"><div class="how-num">3</div><div class="how-text">Бот пришлёт номер Kaspi. Переведи деньги → скинь скриншот → <b>доступ за 5 минут!</b></div></div>
+          <div class="how-step"><div class="how-num">2</div><div class="how-text">Нажмите кнопку ниже: откроется чат в Telegram с готовым сообщением, где уже указаны ваш логин и тариф</div></div>
+          <div class="how-step"><div class="how-num">3</div><div class="how-text">Мы пришлём номер Kaspi. Переведи деньги → скинь скриншот → <b>доступ в течение 5 минут</b></div></div>
         </div>
         <button class="tg-btn" onclick="openTG()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="#0D0F14"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.026 9.546c-.149.658-.538.818-1.092.508l-3.017-2.222-1.456 1.401c-.161.161-.296.296-.607.296l.217-3.063 5.576-5.035c.242-.217-.054-.337-.375-.12L7.008 14.6l-2.95-.921c-.641-.201-.655-.641.136-.949l11.536-4.448c.534-.193 1.001.13.832.966z"/></svg>
@@ -886,11 +888,29 @@ requestAnimationFrame(step)})})();
 // FIREBASE
 // ════════════════════════
 const FB='https://enteshka-default-rtdb.firebaseio.com';
-async function fbGet(p){try{const r=await fetch(FB+p+'.json');return await r.json();}catch(e){return null;}}
-async function fbSet(p,d){try{await fetch(FB+p+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});}catch(e){}}
-async function fbPatch(p,d){try{await fetch(FB+p+'.json',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});}catch(e){}}
-
-const ADMIN={login:'admin'};
+let AUTH;
+if(typeof firebase!=='undefined'){
+  firebase.initializeApp({apiKey:'AIzaSyCNcKtoHCEPCvXiz5seMFVax0gb9FUt3Z0',authDomain:'enteshka.firebaseapp.com',projectId:'enteshka',appId:'1:613987318180:web:b47cb7fe785ceb08d1a931'});
+  AUTH=firebase.auth();
+}else{
+  const no=()=>Promise.reject({code:'auth/network-request-failed'});
+  AUTH={currentUser:null,onAuthStateChanged(){},signOut(){return Promise.resolve();},signInWithEmailAndPassword:no,createUserWithEmailAndPassword:no,signInWithPopup:no,signInWithRedirect:no};
+}
+const ADMIN_EMAIL='shavkate65@gmail.com';
+const FAKE='@login.enteshka.kz';
+let AUTHBUSY=false;
+async function fbReq(method,p,d){
+  const u=AUTH.currentUser;const t=u?await u.getIdToken():null;
+  const r=await fetch(FB+p+'.json'+(t?'?auth='+t:''),{method,headers:{'Content-Type':'application/json'},body:d===undefined?undefined:JSON.stringify(d)});
+  const j=await r.json().catch(()=>null);
+  if(!r.ok||(j&&j.error))throw new Error((j&&j.error)||('HTTP '+r.status));
+  return j;
+}
+async function fbGet(p){try{return await fbReq('GET',p);}catch(e){return null;}}
+async function fbSet(p,d){return fbReq('PUT',p,d);}
+async function fbPatch(p,d){return fbReq('PATCH',p,d);}
+async function fbDel(p){return fbReq('DELETE',p);}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 const PLANS={1:'1 месяц — 1 190 ₸',2:'3 месяца — 2 990 ₸',3:'6 месяцев — 5 590 ₸'};
 const PLAN_MONTHS={1:1,2:3,3:6};
 let CUR=null,CUR_PLAN=2,ansVisible=false,bankFilter='all',bankShown=20;
@@ -943,8 +963,77 @@ function switchTab(tab){
 function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';}
 
 // ════════════════════════
-// REGISTER
+// AUTH (Firebase Authentication)
 // ════════════════════════
+const LEG_OK=['auth/invalid-credential','auth/user-not-found','auth/wrong-password','auth/invalid-login-credentials'];
+function authMsg(e){
+  const c=(e&&e.code)||'';
+  if(c==='auth/email-already-in-use')return 'Логин занят';
+  if(c==='auth/weak-password')return 'Пароль минимум 6 символов';
+  if(c==='auth/too-many-requests')return 'Слишком много попыток. Подождите несколько минут';
+  if(c==='auth/network-request-failed')return 'Нет соединения с интернетом';
+  if(LEG_OK.includes(c))return 'Неверный логин или пароль';
+  if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return '';
+  return 'Ошибка: '+((e&&e.message)||c||e);
+}
+function today(){return new Date().toLocaleDateString('ru-RU');}
+function cleanLogin(x){return String(x||'').toLowerCase().replace(/[^a-z0-9_-]/g,'_');}
+function parseRu(s){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(s||'');return m?new Date(+m[3],+m[2]-1,+m[1],23,59,59):null;}
+async function ensureLogin(login,uid,exact){
+  for(let n=1;n<=30;n++){
+    const l=n===1?login:login+n;
+    const ex=await fbGet('/logins/'+l);
+    if(ex===uid)return l;
+    if(!ex){try{await fbSet('/logins/'+l,uid);return l;}catch(e){}}
+    if(exact)break;
+  }
+  throw new Error('login-taken');
+}
+async function tryClaim(login,pass){
+  const uid=AUTH.currentUser.uid;
+  const data={login};if(pass)data.pass=pass;
+  try{await fbSet('/claims/'+uid,data);}catch(e){return null;}
+  return await fbGet('/users/'+login);
+}
+async function migrateLegacy(uid,login,legacy){
+  await ensureLogin(login,uid,true);
+  let subOk=true;
+  try{await fbSet('/subs/'+uid,{paid:!!legacy.paid,paidUntil:legacy.paidUntil||''});}catch(e){subOk=false;}
+  try{const st=await fbGet('/stats/'+login);if(st)await fbSet('/ustats/'+uid,st);}catch(e){}
+  const prof={name:legacy.name||login,sur:legacy.sur||'',login,email:legacy.email||'',avatar:legacy.avatar||'',createdAt:legacy.createdAt||today()};
+  await fbSet('/profiles/'+uid,prof);
+  if(subOk){try{await fbDel('/users/'+login);}catch(e){}}
+  try{await fbDel('/claims/'+uid);}catch(e){}
+  return prof;
+}
+async function finishLogin(user,hint){
+  hint=hint||{};
+  if(user.email===ADMIN_EMAIL&&user.emailVerified){CUR=null;closeModal();showAdmin();return;}
+  let p=await fbGet('/profiles/'+user.uid);
+  if(!p){
+    const isG=user.providerData.some(x=>x.providerId==='google.com');
+    let claim=await fbGet('/claims/'+user.uid);
+    let login=claim?claim.login:(isG?cleanLogin((user.email||'').split('@')[0]):(hint.login||cleanLogin((user.email||'').split('@')[0])));
+    let legacy=null;
+    if(claim)legacy=await fbGet('/users/'+login);
+    else if(isG)legacy=await tryClaim(login,null);
+    if(legacy){p=await migrateLegacy(user.uid,login,legacy);}
+    else{
+      const dn=(user.displayName||'').trim().split(/\s+/);
+      const l=await ensureLogin(login,user.uid,!isG);
+      p={name:hint.name||dn[0]||l,sur:hint.sur||dn.slice(1).join(' ')||'',login:l,email:isG?(user.email||''):'',avatar:user.photoURL||'',createdAt:today()};
+      await fbSet('/profiles/'+user.uid,p);
+    }
+  }
+  const sub=await fbGet('/subs/'+user.uid)||{};
+  let paid=!!sub.paid;const until=sub.paidUntil||'';
+  const d=parseRu(until);if(paid&&d&&d<new Date())paid=false;
+  CUR=Object.assign({},p,{uid:user.uid,paid,paidUntil:until});
+  const cloud=await fbGet('/ustats/'+user.uid);
+  localStorage.setItem('ENT_STATS',JSON.stringify(cloud&&cloud.history?{history:cloud.history||[],streak:cloud.streak||0,lastDay:cloud.lastDay||'',catRight:cloud.catRight||{},catTotal:cloud.catTotal||{}}:{history:[],streak:0,lastDay:'',catRight:{},catTotal:{}}));
+  closeModal();showApp();updateHomeStats();
+}
+
 document.getElementById('regBtn').addEventListener('click',async function(){
   const name=document.getElementById('rName').value.trim();
   const sur=document.getElementById('rSur').value.trim();
@@ -957,187 +1046,69 @@ document.getElementById('regBtn').addEventListener('click',async function(){
   if(!/^[a-z0-9_]+$/.test(login))return showErr('rErr','Логин: только a-z, цифры, _');
   if(pass.length<6)return showErr('rErr','Пароль минимум 6 символов');
   if(pass!==pass2)return showErr('rErr','Пароли не совпадают');
-  const regBtn=document.getElementById('regBtn');
-  regBtn.textContent='Проверяем...';regBtn.disabled=true;
-  const existing=await fbGet('/users/'+login);
-  if(existing){regBtn.textContent='СОЗДАТЬ АККАУНТ →';regBtn.disabled=false;return showErr('rErr','Логин «'+login+'» уже занят');}
-  const userData={name,sur,login,pass,paid:false,paidUntil:'',createdAt:new Date().toLocaleDateString('ru-RU')};
-  await fbSet('/users/'+login,userData);
-  CUR=userData;setMe(CUR);
-  regBtn.textContent='СОЗДАТЬ АККАУНТ →';regBtn.disabled=false;
-  // New user - clear stats
-  localStorage.setItem('ENT_STATS', JSON.stringify({history:[],streak:0,lastDay:'',catRight:{},catTotal:{}}));
-  closeModal();showApp();
+  const btn=document.getElementById('regBtn');
+  btn.textContent='Создаём...';btn.disabled=true;AUTHBUSY=true;
+  let cred=null;
+  try{
+    cred=await AUTH.createUserWithEmailAndPassword(login+FAKE,pass);
+    try{await ensureLogin(login,cred.user.uid,true);}
+    catch(e){await cred.user.delete();cred=null;throw Object.assign(new Error('x'),{code:'auth/email-already-in-use'});}
+    await fbSet('/profiles/'+cred.user.uid,{name,sur,login,email:'',avatar:'',createdAt:today()});
+    await finishLogin(cred.user,{});
+  }catch(e){
+    if(cred&&!(await fbGet('/profiles/'+cred.user.uid))){try{await cred.user.delete();}catch(_){}}
+    showErr('rErr',authMsg(e)||'Не удалось создать аккаунт');
+  }finally{btn.textContent='СОЗДАТЬ АККАУНТ →';btn.disabled=false;AUTHBUSY=false;}
 });
 
-// ════════════════════════
-// LOGIN
-// ════════════════════════
 document.getElementById('logBtn').addEventListener('click',async function(){
   const login=document.getElementById('lLogin').value.trim().toLowerCase();
   const pass=document.getElementById('lPass').value;
   document.getElementById('lErr').style.display='none';
   if(!login||!pass)return showErr('lErr','Заполните все поля');
-  if(login===ADMIN.login){
-    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pass));
-    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    if(hash==='4d73d50c6c43b331d1ccce802bdfa7c816b2772b3400949a4675ebcc54705300'){
-      const tokenBuf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('enteshka_admin_session_takhir777'));
-      const tokenHex=Array.from(new Uint8Array(tokenBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-      localStorage.setItem('ENT_ADMIN','1');
-      localStorage.setItem('ENT_ADMIN_TOKEN',tokenHex);
-      closeModal();showAdmin();return;
+  const btn=document.getElementById('logBtn');
+  btn.textContent='Входим...';btn.disabled=true;AUTHBUSY=true;
+  try{
+    let cred;
+    try{cred=await AUTH.signInWithEmailAndPassword(login+FAKE,pass);}
+    catch(e){
+      if(!LEG_OK.includes(e.code))throw e;
+      // старый аккаунт (до перехода на Firebase Authentication)?
+      let c2;try{c2=await AUTH.createUserWithEmailAndPassword(login+FAKE,pass);}catch(_){throw e;}
+      const legacy=await tryClaim(login,pass);
+      if(!legacy){try{await c2.user.delete();}catch(_){}throw e;}
+      cred=c2;
     }
-    else return showErr('lErr','Неверный пароль');
-  }
-  const logBtn=document.getElementById('logBtn');
-  logBtn.textContent='Входим...';logBtn.disabled=true;
-  const userData=await fbGet('/users/'+login);
-  logBtn.textContent='ВОЙТИ →';logBtn.disabled=false;
-  if(!userData)return showErr('lErr','Логин не найден');
-  if(userData.pass!==pass)return showErr('lErr','Неверный пароль');
-  CUR=userData;setMe(CUR);
-  // Load stats from Firebase for cross-device sync
-  const cloudStats = await fbGet('/stats/'+login);
-  if(cloudStats && cloudStats.history){
-    localStorage.setItem('ENT_STATS', JSON.stringify({
-      history: cloudStats.history||[],
-      streak: cloudStats.streak||0,
-      lastDay: cloudStats.lastDay||'',
-      catRight: cloudStats.catRight||{},
-      catTotal: cloudStats.catTotal||{}
-    }));
-  } else {
-    localStorage.setItem('ENT_STATS', JSON.stringify({history:[],streak:0,lastDay:'',catRight:{},catTotal:{}}));
-  }
-  closeModal();showApp();
+    await finishLogin(cred.user,{login});
+  }catch(e){showErr('lErr',authMsg(e)||'Не удалось войти');}
+  finally{btn.textContent='ВОЙТИ →';btn.disabled=false;AUTHBUSY=false;}
 });
 
-
-// ════════════════════════
-// GOOGLE SIGN-IN
-// ════════════════════════
-const GOOGLE_CLIENT_ID = '587980924538-cck8keiusj7sk6gqqa0brurn5gu1llmn.apps.googleusercontent.com';
-
-function googleSignIn() {
-  // Universal redirect flow - works in all browsers including Yandex
-  const params = new URLSearchParams({
-    client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: window.location.origin + window.location.pathname,
-    response_type: 'token id_token',
-    scope: 'openid email profile',
-    nonce: Math.random().toString(36).slice(2),
-    prompt: 'select_account'
-  });
-  // Save current page state
-  sessionStorage.setItem('googleAuthReturn', '1');
-  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
-}
-
-// Handle Google redirect callback on page load
-function checkGoogleRedirect() {
-  const hash = window.location.hash;
-  if (!hash || !sessionStorage.getItem('googleAuthReturn')) return;
-  
-  sessionStorage.removeItem('googleAuthReturn');
-  
-  const params = new URLSearchParams(hash.slice(1));
-  const idToken = params.get('id_token');
-  
-  if (idToken) {
-    // Clear hash from URL
-    history.replaceState(null, '', window.location.pathname);
-    handleGoogleCredential({credential: idToken});
-  }
-}
-
-async function handleGoogleCredential(response) {
-  try {
-    // Decode JWT token (without verification - client side)
-    const token = response.credential;
-    // Fix Unicode in JWT decode
-    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-    ).join(''));
-    const payload = JSON.parse(jsonPayload);
-    
-    const googleId = payload.sub;
-    const email = payload.email;
-    const name = payload.given_name || payload.name.split(' ')[0] || 'Пользователь';
-    const sur = payload.family_name || '';
-    const avatar = payload.picture || '';
-    const login = email.split('@')[0]; // use only part before @ as login
-    
-    // Check if user exists in Firebase
-    let userData = await fbGet('/users/' + login);
-    
-    if (!userData) {
-      // New user - create account
-      userData = {
-        name,
-        sur,
-        login,
-        pass: '',
-        email,
-        avatar,
-        googleId,
-        paid: false,
-        paidUntil: '',
-        createdAt: new Date().toLocaleDateString('ru-RU')
-      };
-      await fbSet('/users/' + login, userData);
-    } else {
-      // Update avatar if changed
-      if (avatar && userData.avatar !== avatar) {
-        userData.avatar = avatar;
-        await fbSet('/users/' + login, userData);
-      }
+async function googleSignIn(){
+  AUTHBUSY=true;
+  try{
+    const prov=new (firebase.auth.GoogleAuthProvider)();
+    prov.setCustomParameters({prompt:'select_account'});
+    const cred=await AUTH.signInWithPopup(prov);
+    await finishLogin(cred.user,{});
+  }catch(e){
+    if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){
+      AUTHBUSY=false;
+      try{await AUTH.signInWithRedirect(new (firebase.auth.GoogleAuthProvider)());return;}catch(_){}
     }
-    
-    CUR = userData;
-    setMe(CUR);
-    
-    // Load stats from Firebase for this user (cross-device sync)
-    const cloudStats = await fbGet('/stats/' + login);
-    if (cloudStats && cloudStats.history) {
-      // Merge: use cloud stats as base
-      localStorage.setItem('ENT_STATS', JSON.stringify({
-        history: cloudStats.history || [],
-        streak: cloudStats.streak || 0,
-        lastDay: cloudStats.lastDay || '',
-        catRight: cloudStats.catRight || {},
-        catTotal: cloudStats.catTotal || {}
-      }));
-    } else {
-      // New user - clear any leftover stats from previous user
-      localStorage.setItem('ENT_STATS', JSON.stringify({
-        history: [], streak: 0, lastDay: '', catRight: {}, catTotal: {}
-      }));
-    }
-    
-    closeModal();
-    showApp();
-    
-  } catch (err) {
-    console.error('Google Sign-In error:', err);
-    alert('Ошибка входа через Google. Попробуйте ещё раз.');
-  }
+    const m=authMsg(e);
+    if(m)alert('Ошибка входа через Google. '+m+(e.code==='auth/unauthorized-domain'?' (домен не добавлен в Firebase)':''));
+  }finally{AUTHBUSY=false;}
 }
 
-// Check Google redirect on page load
-window.addEventListener('load', function() {
-  checkGoogleRedirect();
-});
-
-function doLogout(){setMe(null);CUR=null;localStorage.removeItem('ENT_ADMIN');localStorage.removeItem('ENT_ADMIN_TOKEN');localStorage.removeItem('ENT_STATS');showLanding();}
+function doLogout(){CUR=null;localStorage.removeItem('ENT_STATS');AUTH.signOut();showLanding();}
 
 // ════════════════════════
 // APP UI
 // ════════════════════════
 function updateAppUI(){
   if(!CUR)return;
-  fbGet('/users/'+CUR.login).then(fresh=>{if(fresh){CUR=fresh;setMe(CUR);applyUI();}});
+  fbGet('/subs/'+CUR.uid).then(sub=>{if(!sub)return;let paid=!!sub.paid;const d=parseRu(sub.paidUntil);if(paid&&d&&d<new Date())paid=false;CUR.paid=paid;CUR.paidUntil=sub.paidUntil||'';applyUI();});
   applyUI();
 }
 function applyUI(){
@@ -1293,9 +1264,9 @@ function finishQuiz(){
 
 function saveTestResult(score, elapsedSec, timeStr){
   // Also save to Firebase for admin stats
-  if(CUR && CUR.login){
+  if(CUR && CUR.uid){
     // Save full stats to Firebase for cross-device sync
-    fbGet('/stats/'+CUR.login).then(existing=>{
+    fbGet('/ustats/'+CUR.uid).then(existing=>{
       const s = existing || {totalTests:0,totalScore:0,totalTime:0,bestScore:0,history:[],streak:0,lastDay:'',catRight:{},catTotal:{}};
       const today=new Date().toLocaleDateString('ru-RU');
       const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
@@ -1337,7 +1308,7 @@ function saveTestResult(score, elapsedSec, timeStr){
         history, streak, lastDay, catRight, catTotal
       };
       
-      fbSet('/stats/'+CUR.login, fullStats);
+      fbSet('/ustats/'+CUR.uid, fullStats).catch(()=>{});
       
       // Also update localStorage to match
       localStorage.setItem('ENT_STATS', JSON.stringify({history, streak, lastDay, catRight, catTotal}));
@@ -1379,8 +1350,8 @@ function saveTestResult(score, elapsedSec, timeStr){
 // PROFILE RENDER
 // ════════════════════════
 function renderProfile(){
-  if(CUR && CUR.login){
-    fbGet('/stats/'+CUR.login).then(cloudStats=>{
+  if(CUR && CUR.uid){
+    fbGet('/ustats/'+CUR.uid).then(cloudStats=>{
       if(cloudStats && cloudStats.history){
         localStorage.setItem('ENT_STATS', JSON.stringify({
           history: cloudStats.history||[],
@@ -1536,56 +1507,50 @@ function updateHomeStats(){
 // ════════════════════════
 // ADMIN
 // ════════════════════════
+function showAdminMsg(text,ok){const el=document.getElementById('aMsg');el.style.display='block';el.textContent=text;el.style.background=ok?'var(--ok-bg)':'var(--bad-bg)';el.style.color=ok?'var(--green)':'var(--red)';}
+async function setSub(login,paid,until){
+  const uid=await fbGet('/logins/'+login);
+  if(uid){await fbSet('/subs/'+uid,{paid,paidUntil:until});return true;}
+  const legacy=await fbGet('/users/'+login);
+  if(!legacy)return false;
+  await fbPatch('/users/'+login,{paid,paidUntil:until});return true;
+}
 async function giveAccess(){
   const login=document.getElementById('aLogin').value.trim().toLowerCase();
   const months=parseInt(document.getElementById('aPlan').value);
   if(!login)return showAdminMsg('Введите логин',false);
-  const userData=await fbGet('/users/'+login);
-  if(!userData)return showAdminMsg('Пользователь «'+login+'» не найден',false);
   const until=new Date();until.setMonth(until.getMonth()+months);
-  const updated={...userData,paid:true,paidUntil:until.toLocaleDateString('ru-RU')};
-  await fbSet('/users/'+login,updated);
-  if(CUR&&CUR.login===login){CUR=updated;setMe(CUR);}
+  const ds=until.toLocaleDateString('ru-RU');
+  try{
+    if(!(await setSub(login,true,ds)))return showAdminMsg('Пользователь «'+login+'» не найден',false);
+  }catch(e){return showAdminMsg('Ошибка: '+e.message,false);}
   document.getElementById('aLogin').value='';
-  showAdminMsg('✅ Доступ выдан «'+login+'» до '+updated.paidUntil,true);
+  showAdminMsg('Доступ выдан «'+login+'» до '+ds,true);
   renderUsers();
 }
-function showAdminMsg(text,ok){
-  const el=document.getElementById('aMsg');el.textContent=text;el.style.display='block';
-  el.style.background=ok?'rgba(46,204,113,0.1)':'rgba(231,76,60,0.1)';
-  el.style.color=ok?'var(--green)':'var(--red)';
-}
 async function revokeAccess(login){
-  const userData=await fbGet('/users/'+login);if(!userData)return;
-  await fbPatch('/users/'+login,{paid:false,paidUntil:''});renderUsers();
+  try{await setSub(login,false,'');}catch(e){return showAdminMsg('Ошибка: '+e.message,false);}
+  renderUsers();
 }
 let allUsersData = [];
 let currentSort = 'reg';
-
 async function renderUsers(){
   const list=document.getElementById('userList');
   list.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:0.8rem;">Загружаем...</div>';
-  const users=await fbGet('/users');
-  if(!users||!Object.keys(users).length){list.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:0.8rem;">Пользователей пока нет</div>';return;}
-  
-  // Fetch stats for each user
-  const userList = Object.values(users);
-  const userStatsPromises = userList.map(u => fbGet('/stats/'+u.login));
-  const statsArr = await Promise.all(userStatsPromises);
-  
-  allUsersData = userList.map((u,i) => ({...u, _stats: statsArr[i]||{}}));
-  
-  // Global stats
-  const totalTests = allUsersData.reduce((a,u)=>a+(u._stats.totalTests||0),0);
-  const paidCount = allUsersData.filter(u=>u.paid).length;
-  const avgScores = allUsersData.filter(u=>u._stats.avgScore).map(u=>u._stats.avgScore);
-  const globalAvg = avgScores.length ? Math.round(avgScores.reduce((a,b)=>a+b,0)/avgScores.length*10)/10 : '—';
-  
-  document.getElementById('aStat1').textContent = allUsersData.length;
-  document.getElementById('aStat2').textContent = paidCount;
-  document.getElementById('aStat3').textContent = totalTests;
-  document.getElementById('aStat4').textContent = globalAvg !== '—' ? globalAvg+'/20' : '—';
-  
+  const [profiles,subs,ustats,legacy,lstats]=await Promise.all([fbGet('/profiles'),fbGet('/subs'),fbGet('/ustats'),fbGet('/users'),fbGet('/stats')]);
+  const out=[];
+  Object.entries(profiles||{}).forEach(([uid,p])=>{const sb=(subs&&subs[uid])||{};out.push({name:p.name||'',sur:p.sur||'',login:p.login||'',createdAt:p.createdAt||'',paid:!!sb.paid,paidUntil:sb.paidUntil||'',_stats:(ustats&&ustats[uid])||{}});});
+  Object.entries(legacy||{}).forEach(([lg,u])=>{out.push({name:u.name||'',sur:u.sur||'',login:u.login||lg,createdAt:u.createdAt||'',paid:!!u.paid,paidUntil:u.paidUntil||'',_stats:(lstats&&lstats[lg])||{}});});
+  if(!out.length){list.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:0.8rem;">Пользователей пока нет</div>';return;}
+  allUsersData=out;
+  const totalTests=out.reduce((a,u)=>a+(u._stats.totalTests||0),0);
+  const paidCount=out.filter(u=>u.paid).length;
+  const avgScores=out.filter(u=>u._stats.avgScore).map(u=>u._stats.avgScore);
+  const globalAvg=avgScores.length?Math.round(avgScores.reduce((a,b)=>a+b,0)/avgScores.length*10)/10:'—';
+  document.getElementById('aStat1').textContent=out.length;
+  document.getElementById('aStat2').textContent=paidCount;
+  document.getElementById('aStat3').textContent=totalTests;
+  document.getElementById('aStat4').textContent=globalAvg!=='—'?globalAvg+'/20':'—';
   renderUserList();
 }
 
@@ -1613,10 +1578,10 @@ function renderUserList(){
     const mins=s.totalTime?Math.round(s.totalTime/60)+'мин':'—';
     const last=s.lastTest||'—';
     return `<div class="user-row">
-      <div class="ur-av">${(u.name[0]||'?')+(u.sur[0]||'?')}</div>
+      <div class="ur-av">${esc((u.name[0]||'?')+(u.sur[0]||'?'))}</div>
       <div class="ur-info">
-        <div class="ur-name">${u.name} ${u.sur}</div>
-        <div class="ur-login">@${u.login}${u.paidUntil?' · до '+u.paidUntil:''}${u.createdAt?' · рег. '+u.createdAt:''}</div>
+        <div class="ur-name">${esc(u.name)} ${esc(u.sur)}</div>
+        <div class="ur-login">@${esc(u.login)}${u.paidUntil?' · до '+esc(u.paidUntil):''}${u.createdAt?' · рег. '+esc(u.createdAt):''}</div>
         <div class="ur-stats">
           <div class="ur-stat gold">${tests} тестов</div>
           <div class="ur-stat good">⭐ avg ${avg}</div>
@@ -1626,7 +1591,7 @@ function renderUserList(){
         </div>
       </div>
       <div class="ur-badge ${u.paid?'badge-on':'badge-off'}">${u.paid?'✓ Активна':'Нет'}</div>
-      ${u.paid?`<button class="sm-btn sm-btn-red" onclick="revokeAccess('${u.login}')">Отозвать</button>`:`<button class="sm-btn sm-btn-gold" onclick="document.getElementById('aLogin').value='${u.login}'">Выдать</button>`}
+      ${u.paid?`<button class="sm-btn sm-btn-red" onclick="revokeAccess('${esc(u.login)}')">Отозвать</button>`:`<button class="sm-btn sm-btn-gold" onclick="document.getElementById('aLogin').value='${esc(u.login)}'">Выдать</button>`}
     </div>`;
   }).join('');
 }
@@ -1696,25 +1661,11 @@ const tg=document.getElementById('trustGrid');if(tg)trustObserver.observe(tg);
 
 // AUTO LOGIN
 // ════════════════════════
-(async function(){
-  if(localStorage.getItem('ENT_ADMIN')==='1'){
-    // Verify password hash is still valid - check against stored session token
-    const adminToken=localStorage.getItem('ENT_ADMIN_TOKEN');
-    const expectedToken=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('enteshka_admin_session_takhir777'));
-    const expectedHex=Array.from(new Uint8Array(expectedToken)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    if(adminToken===expectedHex){showAdmin();return;}
-    else{localStorage.removeItem('ENT_ADMIN');localStorage.removeItem('ENT_ADMIN_TOKEN');}
-  }
-  // First check if returning from Google OAuth
-  checkGoogleRedirect();
-  
-  const saved=getMe();
-  if(!saved||!saved.login)return;
-  const fresh=await fbGet('/users/'+saved.login);
-  if(!fresh){setMe(null);return;}
-  CUR=fresh;setMe(CUR);showApp();
-  updateHomeStats();
-})();
+AUTH.onAuthStateChanged(async function(user){
+  if(AUTHBUSY)return;
+  if(!user){CUR=null;return;}
+  try{await finishLogin(user,{});}catch(e){console.error(e);}
+});
 
 // ════════════════════════
 // QUESTIONS DATABASE
