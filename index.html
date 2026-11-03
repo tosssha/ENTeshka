@@ -404,8 +404,17 @@ button:active{transform:scale(.97)!important}
 <meta name="google-signin-client_id" content="587980924538-cck8keiusj7sk6gqqa0brurn5gu1llmn.apps.googleusercontent.com">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>try{if(localStorage.getItem('ENT_WAS_IN')==='1')document.documentElement.classList.add('auth-pending');}catch(e){}</script>
+<style>
+html.auth-pending #landing,html.auth-pending #app,html.auth-pending #adminPage{display:none!important}
+#splash{display:none;position:fixed;inset:0;z-index:9999;background:var(--dark,#0d0f14);align-items:center;justify-content:center}
+html.auth-pending #splash{display:flex}
+#splash i{width:34px;height:34px;border-radius:50%;border:3px solid rgba(201,168,76,.25);border-top-color:#c9a84c;animation:splin .8s linear infinite}
+@keyframes splin{to{transform:rotate(360deg)}}
+</style>
 </head>
 <body>
+<div id="splash"><i></i></div>
 
 <!-- ══════════════════════════════
      LANDING PAGE
@@ -1031,6 +1040,7 @@ async function finishLogin(user,hint){
   CUR=Object.assign({},p,{uid:user.uid,paid,paidUntil:until});
   const cloud=await fbGet('/ustats/'+user.uid);
   localStorage.setItem('ENT_STATS',JSON.stringify(cloud&&cloud.history?{history:cloud.history||[],streak:cloud.streak||0,lastDay:cloud.lastDay||'',catRight:cloud.catRight||{},catTotal:cloud.catTotal||{}}:{history:[],streak:0,lastDay:'',catRight:{},catTotal:{}}));
+  try{localStorage.setItem('ENT_WAS_IN','1');}catch(e){}
   closeModal();showApp();updateHomeStats();
 }
 
@@ -1101,7 +1111,7 @@ async function googleSignIn(){
   }finally{AUTHBUSY=false;}
 }
 
-function doLogout(){CUR=null;localStorage.removeItem('ENT_STATS');AUTH.signOut();showLanding();}
+function doLogout(){CUR=null;try{localStorage.removeItem('ENT_WAS_IN');}catch(e){}localStorage.removeItem('ENT_STATS');AUTH.signOut();showLanding();}
 
 // ════════════════════════
 // APP UI
@@ -1663,10 +1673,18 @@ const tg=document.getElementById('trustGrid');if(tg)trustObserver.observe(tg);
 
 // AUTO LOGIN
 // ════════════════════════
+function authReady(){document.documentElement.classList.remove('auth-pending');}
+setTimeout(authReady,8000);
 AUTH.onAuthStateChanged(async function(user){
   if(AUTHBUSY)return;
-  if(!user){CUR=null;return;}
-  try{await finishLogin(user,{});}catch(e){console.error(e);}
+  if(!user){
+    CUR=null;
+    try{localStorage.removeItem('ENT_WAS_IN');}catch(e){}
+    authReady();return;
+  }
+  try{await finishLogin(user,{});try{localStorage.setItem('ENT_WAS_IN','1');}catch(e){}}
+  catch(e){console.error(e);}
+  authReady();
 });
 
 // ════════════════════════
