@@ -662,8 +662,9 @@ document.querySelectorAll('#landing .section .wrap > *,#landing .row,#landing .p
 <script>
 (function(){function set(t,save){var h=document.documentElement;if(save){h.classList.add('theme-anim');setTimeout(function(){h.classList.remove('theme-anim')},450)}h.setAttribute('data-theme',t);if(save){try{localStorage.setItem('ENT_THEME',t)}catch(e){}}
 document.querySelectorAll('.theme-opt').forEach(function(b){var on=b.dataset.t===t;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on)})}
-document.querySelectorAll('.theme-opt').forEach(function(b){b.addEventListener('click',function(){set(b.dataset.t,true)})});
-set(document.documentElement.getAttribute('data-theme')||'dark',false)})();
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.theme-opt');if(b)set(b.dataset.t,true)});
+set(document.documentElement.getAttribute('data-theme')||'dark',false);
+document.addEventListener('DOMContentLoaded',function(){set(document.documentElement.getAttribute('data-theme')||'dark',false)})})();
 </script>
 <script>
 (function(){var t=document.getElementById('ftimer'),sg=document.getElementById('fseg'),cp=document.getElementById('fcap');if(!t)return;
