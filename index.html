@@ -105,8 +105,7 @@ function swapQ(){
     QS.forEach(function(q,i){var r=QS_RU[i];q.q=r.q;q.opts=r.opts;if(r.ctx)q.ctx=r.ctx});
   }
   try{
-    var bp=document.getElementById('page-bank');
-    if(bp&&bp.classList.contains('active')&&typeof renderBank==='function')renderBank();
+    if(typeof renderBank==='function'&&document.getElementById('bankList'))renderBank();
   }catch(e){}
 }
 function loadKK(cb){
